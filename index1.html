@@ -1,0 +1,2201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HEMANTH Catering & Cooking Services | Digital Menu</title>
+  <!-- Google Fonts: Playfair Display for Heritage Headings & Inter for Clean Readability -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome for crisp icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracotta: {
+              DEFAULT: '#5A1E12',
+              light: '#7A2A1A',
+              dark: '#3F130A',
+            },
+            saffron: {
+              DEFAULT: '#D97706',
+              light: '#F59E0B',
+              pale: '#FEF3C7',
+            },
+            parchment: {
+              DEFAULT: '#FDFBF7',
+              dark: '#F5EFE6',
+            },
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    /* Hide scrollbars cleanly for horizontal pill sliders */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    /* Smooth accordion & drawer transitions */
+    .accordion-content {
+      transition: max-height 0.28s ease-out, opacity 0.25s ease;
+    }
+    @keyframes pulseSubtle {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+    }
+    .badge-pop {
+      animation: pulseSubtle 0.3s ease-in-out;
+    }
+  </style>
+</head>
+<body class="bg-stone-200/80 text-stone-800 font-sans antialiased selection:bg-saffron-pale selection:text-terracotta">
+
+  <!-- Desktop Frame Toggle Bar (Visible only on md+ screens) -->
+  <div id="desktopToolbar" class="hidden md:flex items-center justify-between max-w-5xl mx-auto px-4 pt-3 pb-1 text-xs text-stone-600">
+    <div class="flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-full bg-emerald-600"></span>
+      <span>Digital Interactive Catering Menu • <strong>Vijayawada &amp; Indupalli</strong></span>
+    </div>
+    <div class="flex items-center gap-2 bg-white px-2.5 py-1 rounded-full shadow-sm border border-stone-200">
+      <span class="font-medium text-stone-500">Viewport:</span>
+      <button id="btnMobileFrame" onclick="setViewportMode('mobile')" class="px-2.5 py-0.5 rounded-full bg-terracotta text-white font-semibold transition">
+        <i class="fa-solid fa-mobile-screen-button mr-1"></i>Mobile Frame
+      </button>
+      <button id="btnFullWidth" onclick="setViewportMode('full')" class="px-2.5 py-0.5 rounded-full text-stone-600 hover:bg-stone-100 font-medium transition">
+        <i class="fa-solid fa-desktop mr-1"></i>Expanded View
+      </button>
+    </div>
+  </div>
+
+  <!-- Main App Container (Mobile-first 100% width on mobile; centered mobile phone frame on desktop by default) -->
+  <div id="appShell" class="w-full md:max-w-[440px] md:my-3 md:rounded-[2rem] md:shadow-2xl md:border-[6px] md:border-stone-800 bg-parchment min-h-screen md:min-h-[840px] mx-auto relative flex flex-col overflow-x-clip transition-all duration-300">
+
+    <!-- 1. STICKY TOP HEADER -->
+    <header id="stickyHeader" class="sticky top-0 z-30 bg-terracotta text-white shadow-md select-none">
+      <div id="headerSwipeArea" class="px-3.5 py-2.5 flex items-center justify-between gap-2 touch-pan-y">
+        <!-- Brand Logo + Title -->
+        <div ondblclick="toggleHeaderAdminBtn()" class="flex items-center gap-2.5 min-w-0 cursor-pointer">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-parchment p-1 border border-saffron/70 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
+            <img
+              src="assets\Hemanth.png"
+              alt="Hemanth Catering & Cooking Services Logo"
+              class="w-full h-full object-contain pointer-events-none"
+              onerror="this.onerror=null;this.src='https://placehold.co/96x96/FDFBF7/5A1E12?text=HC';"
+            />
+          </div>
+          <div class="min-w-0">
+            <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-200/95 truncate">
+              Vijayawada . Indupalli's
+            </p>
+            <h1 class="font-serif font-bold text-base sm:text-lg leading-tight tracking-wide text-amber-50 truncate">
+              HEMANTH
+            </h1>
+            <p class="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-amber-200/95 truncate">
+              Catering &amp; Cooking Services
+            </p>
+          </div>
+        </div>
+
+        <!-- Quick Call, WhatsApp & Swipe-Revealed Manage Menu Action Buttons -->
+        <div class="flex items-center gap-1.5 shrink-0">
+          <!-- Hidden Manage Menu Button (Revealed by swiping right-to-left on header) -->
+          <div
+            id="hiddenMenuActionWrapper"
+            class="overflow-hidden transition-all duration-300 ease-out max-w-0 opacity-0 translate-x-3 pointer-events-none"
+          >
+            <button
+              type="button"
+              onclick="openMenuManager(true)"
+              title="Add or Remove Menu Items"
+              class="flex items-center gap-1.5 px-2.5 h-9 rounded-full bg-saffron hover:bg-saffron-light active:scale-95 text-terracotta-dark text-xs font-extrabold shadow-sm border border-amber-200/70 whitespace-nowrap transition"
+            >
+              <i class="fa-solid fa-pen-to-square text-xs"></i>
+              <span>Manage Menu</span>
+            </button>
+          </div>
+
+          <a href="tel:+919492937499" title="Call Eswar.P" class="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 text-amber-100 border border-amber-300/30 transition">
+            <i class="fa-solid fa-phone text-sm"></i>
+          </a>
+          <button onclick="openDirectWhatsApp()" title="Chat on WhatsApp" class="flex items-center gap-1.5 px-2.5 h-9 rounded-full bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-semibold shadow-sm transition">
+            <i class="fa-brands fa-whatsapp text-base"></i>
+            <span class="hidden xs:inline">Chat</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. LIVE SEARCH BAR -->
+      <div class="px-3.5 pb-2.5">
+        <div class="relative">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400 text-xs"></i>
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search any dish (e.g., Gutti Vankaya, Dum Biryani, Apricot/Halwa, Natukodi)..."
+            oninput="handleSearch(this.value)"
+            class="w-full pl-9 pr-9 py-2 rounded-xl bg-parchment text-stone-800 placeholder-stone-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-saffron shadow-inner"
+          />
+          <button
+            id="clearSearchBtn"
+            onclick="clearSearch()"
+            class="hidden absolute right-2.5 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-stone-200 text-stone-600 hover:bg-stone-300 flex items-center justify-center text-xs"
+            aria-label="Clear search"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO BANNER: Tagline, Contact & Occasions -->
+    <section id="heroBanner" class="bg-gradient-to-br from-terracotta-dark via-terracotta to-amber-900 text-amber-50 px-4 py-3.5 border-b-2 border-saffron/60">
+      <div class="flex flex-col gap-2">
+        <p class="font-serif italic text-xs sm:text-sm text-amber-200 leading-snug text-center">
+          “We Undertake All Types of Catering. Experts in South Indian Cuisine.”
+        </p>
+
+        <!-- Contact Strip for Eswar.P -->
+        <div class="bg-black/25 rounded-xl p-2.5 border border-amber-200/15 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <div class="text-[10px] uppercase tracking-wider text-amber-300/90 font-semibold">Proprietor / Booking</div>
+            <div class="text-sm font-bold text-white flex items-center gap-1.5">
+              <i class="fa-solid fa-user-tie text-saffron-light text-xs"></i> Eswar.P
+            </div>
+          </div>
+          <div class="flex flex-col sm:flex-row gap-1.5 text-xs">
+            <a href="tel:+919492937499" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-100 font-medium transition">
+              <i class="fa-solid fa-phone-volume text-saffron-light text-[11px]"></i> +91 94929 37499
+            </a>
+            <a href="tel:+918985175924" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-amber-100 font-medium transition">
+              <i class="fa-solid fa-phone-volume text-saffron-light text-[11px]"></i> +91 89851 75924
+            </a>
+          </div>
+        </div>
+
+        <!-- Occasions Pills -->
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pt-0.5 text-[10px] font-medium text-amber-100/90">
+          <span class="shrink-0 px-2 py-0.5 rounded-md bg-white/10">Weddings</span>
+          <span class="text-saffron-light">•</span>
+          <span class="shrink-0 px-2 py-0.5 rounded-md bg-white/10">Receptions</span>
+          <span class="text-saffron-light">•</span>
+          <span class="shrink-0 px-2 py-0.5 rounded-md bg-white/10">Engagements</span>
+          <span class="text-saffron-light">•</span>
+          <span class="shrink-0 px-2 py-0.5 rounded-md bg-white/10">Corporate Gatherings</span>
+          <span class="text-saffron-light">•</span>
+          <span class="shrink-0 px-2 py-0.5 rounded-md bg-white/10">Private Parties</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. MAIN TAB NAVIGATION (Sticky below header) -->
+    <nav id="mainTabs" class="sticky top-[96px] z-20 bg-parchment/95 backdrop-blur-md border-b border-stone-200 px-3 pt-2 pb-1.5 shadow-sm">
+      <div class="grid grid-cols-3 gap-1.5 bg-parchment-dark p-1 rounded-xl border border-stone-200/80">
+        <button
+          id="tab-combos"
+          onclick="switchTab('combos')"
+          class="tab-btn py-2 px-2 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center gap-0.5 bg-terracotta text-white shadow-sm"
+        >
+          <span>Combo Packages</span>
+          <span class="text-[9px] font-normal opacity-85">4 Full Menus</span>
+        </button>
+        <button
+          id="tab-veg"
+          onclick="switchTab('veg')"
+          class="tab-btn py-2 px-2 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center gap-0.5 text-stone-700 hover:bg-white/70"
+        >
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-xs border border-emerald-600 flex items-center justify-center">
+              <span class="w-1 h-1 rounded-full bg-emerald-600"></span>
+            </span>
+            Veg Menu
+          </span>
+          <span class="text-[9px] font-normal text-stone-500">Part I (17 Cats)</span>
+        </button>
+        <button
+          id="tab-nonveg"
+          onclick="switchTab('nonveg')"
+          class="tab-btn py-2 px-2 rounded-lg text-xs font-bold transition flex flex-col items-center justify-center gap-0.5 text-stone-700 hover:bg-white/70"
+        >
+          <span class="flex items-center gap-1">
+            <span class="w-2 h-2 rounded-xs border border-red-600 flex items-center justify-center">
+              <span class="w-1 h-1 rounded-full bg-red-600"></span>
+            </span>
+            Non-Veg
+          </span>
+          <span class="text-[9px] font-normal text-stone-500">Part II (14 Cats)</span>
+        </button>
+      </div>
+
+      <!-- 4. HORIZONTAL PILL SUB-FILTERS (Dynamic per active tab) -->
+      <div id="subFilterContainer" class="mt-2 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1">
+        <!-- Populated dynamically via JS -->
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT AREA -->
+    <main id="menuContent" class="flex-1 px-3.5 py-4 space-y-3.5 pb-28">
+      <!-- Dynamic Cards & Accordions rendered here -->
+    </main>
+
+    <!-- HERITAGE QUALITY FOOTER -->
+    <footer class="bg-parchment-dark border-t border-stone-200 px-4 py-6 pb-28 text-center space-y-2">
+      <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-terracotta text-xs font-semibold border border-amber-300/60">
+        <i class="fa-solid fa-award text-saffron"></i>
+        <span>“Best Food in Quality with Cleanliness and Hygiene”</span>
+      </div>
+      <p class="text-xs font-bold text-terracotta">HEMANTH CATERING &amp; COOKING SERVICES</p>
+      <p class="text-[11px] text-stone-500">Vijayawada • Indupalli | Contact: Eswar.P (+91 94929 37499, +91 89851 75924)</p>
+    </footer>
+
+    <!-- FLOATING SHORTLIST / INQUIRY BUILDER BAR -->
+    <div id="floatingBar" class="fixed bottom-3 left-1/2 -translate-x-1/2 w-[calc(100%-1.5rem)] max-w-[416px] z-30 transition-all duration-300">
+      <button
+        onclick="toggleDrawer(true)"
+        class="w-full bg-terracotta hover:bg-terracotta-light text-white rounded-2xl px-4 py-3 shadow-xl border border-saffron/50 flex items-center justify-between gap-3 active:scale-[0.99] transition"
+      >
+        <div class="flex items-center gap-2.5">
+          <div class="relative w-9 h-9 rounded-xl bg-saffron text-terracotta-dark flex items-center justify-center font-bold shadow-sm">
+            <i class="fa-solid fa-utensils"></i>
+            <span id="shortlistBadge" class="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-emerald-500 text-white text-[11px] font-extrabold flex items-center justify-center shadow">
+              0
+            </span>
+          </div>
+          <div class="text-left">
+            <div class="text-xs sm:text-sm font-bold leading-tight">My Menu Shortlist</div>
+            <div id="shortlistSummaryText" class="text-[11px] text-amber-200/90">Tap + on dishes or packages to build quote</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-1.5 bg-white/15 px-3 py-1.5 rounded-xl text-xs font-semibold text-amber-100">
+          <span>Review</span>
+          <i class="fa-solid fa-chevron-up text-[10px]"></i>
+        </div>
+      </button>
+    </div>
+
+    <!-- INTERACTIVE SHORTLIST / INQUIRY BUILDER DRAWER -->
+    <div id="shortlistModal" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div onclick="toggleDrawer(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+
+      <!-- Drawer Panel -->
+      <div class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[440px] bg-parchment rounded-t-3xl shadow-2xl border-t-2 border-saffron max-h-[90vh] flex flex-col overflow-hidden">
+        <!-- Drawer Handle & Header -->
+        <div class="bg-terracotta text-white px-4 py-3.5 flex items-center justify-between">
+          <div>
+            <h2 class="font-serif font-bold text-base sm:text-lg flex items-center gap-2">
+              <i class="fa-solid fa-clipboard-list text-saffron-light"></i>
+              My Catering Inquiry Builder
+            </h2>
+            <p class="text-[11px] text-amber-200">Customize your selection &amp; send to Eswar.P</p>
+          </div>
+          <button onclick="toggleDrawer(false)" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Drawer Scrollable Body -->
+        <div class="p-4 overflow-y-auto space-y-4 flex-1">
+          <!-- Event Details Form -->
+          <div class="bg-white rounded-2xl p-3.5 border border-stone-200 shadow-xs space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-terracotta flex items-center gap-1.5">
+                <i class="fa-solid fa-calendar-check text-saffron"></i> Event Details (Optional)
+              </h3>
+              <!-- Optional "+ Comments" Toggle Button to add missing items or notes -->
+              <button
+                type="button"
+                id="toggleCommentsBtn"
+                onclick="toggleCommentsField()"
+                class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-saffron-pale hover:bg-amber-200 text-terracotta border border-amber-300 transition active:scale-95"
+              >
+                <i id="toggleCommentsIcon" class="fa-solid fa-plus text-[10px]"></i>
+                <span id="toggleCommentsLabel">Comments</span>
+              </button>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-medium text-stone-600 mb-1">Your Name</label>
+                <input id="clientName" type="text" placeholder="Enter your name" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:border-saffron" />
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-stone-600 mb-1">Event Date</label>
+                <input id="eventDate" type="date" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:border-saffron" />
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <div>
+                <label class="block text-[11px] font-medium text-stone-600 mb-1">Occasion</label>
+                <select id="eventType" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs bg-white focus:outline-none focus:border-saffron">
+                  <option value="Wedding">Wedding</option>
+                  <option value="Reception">Reception</option>
+                  <option value="Engagement">Engagement</option>
+                  <option value="Corporate Gathering">Corporate Gathering</option>
+                  <option value="Private Party">Private Party</option>
+                  <option value="Other Function">Other Function</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[11px] font-medium text-stone-600 mb-1">Est. Guests (Plates)</label>
+                <input id="guestCount" type="number" min="10" placeholder="e.g., 250" class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs focus:outline-none focus:border-saffron" />
+              </div>
+            </div>
+
+            <!-- Collapsible Optional "Addons / Comments" Textbox Field -->
+            <div id="addonsCommentsContainer" class="hidden pt-1 border-t border-stone-100">
+              <div class="flex items-center justify-between mb-1">
+                <label for="addonsComments" class="block text-[11px] font-semibold text-terracotta">
+                  Addons / Comments <span class="font-normal text-stone-400">(Optional)</span>
+                </label>
+                <button
+                  type="button"
+                  onclick="clearCommentsField()"
+                  id="clearCommentsBtn"
+                  class="hidden text-[10px] font-medium text-stone-400 hover:text-red-600"
+                >
+                  Clear
+                </button>
+              </div>
+              <textarea
+                id="addonsComments"
+                rows="2"
+                oninput="handleCommentsInput(this.value)"
+                placeholder="Add any missing dishes, live counters, spice preferences, or special instructions..."
+                class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-saffron resize-y"
+              ></textarea>
+            </div>
+          </div>
+
+          <!-- Selected Items List -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-terracotta">
+                Selected Items (<span id="drawerCount">0</span>)
+              </h3>
+              <button id="clearAllBtn" onclick="clearShortlist()" class="text-[11px] font-semibold text-red-600 hover:underline hidden">
+                Clear All
+              </button>
+            </div>
+
+            <div id="shortlistItemsContainer" class="space-y-2">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Drawer Footer Actions -->
+        <div class="p-3.5 bg-white border-t border-stone-200 space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <button
+              onclick="sendWhatsAppQuote('919492937499')"
+              class="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-[0.99] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition"
+            >
+              <i class="fa-brands fa-whatsapp text-base"></i>
+              <span>Send to Eswar (1)</span>
+            </button>
+            <button
+              onclick="sendWhatsAppQuote('918985175924')"
+              class="w-full py-2.5 px-3 rounded-xl bg-emerald-700 hover:bg-emerald-800 active:scale-[0.99] text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-sm transition"
+            >
+              <i class="fa-brands fa-whatsapp text-base"></i>
+              <span>Send to Alt No. (2)</span>
+            </button>
+          </div>
+          <button
+            onclick="copyShortlistToClipboard()"
+            class="w-full py-2 px-3 rounded-xl bg-parchment-dark hover:bg-stone-200 text-stone-700 text-xs font-semibold flex items-center justify-center gap-1.5 transition"
+          >
+            <i class="fa-regular fa-copy"></i>
+            <span id="copyBtnLabel">Copy Formatted Menu List</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MANAGE MENU MODAL / DRAWER (ADD & REMOVE ITEMS PER CATEGORY) -->
+    <div id="menuManagerModal" class="fixed inset-0 z-50 hidden">
+      <!-- Backdrop -->
+      <div onclick="openMenuManager(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+
+      <!-- Modal Panel -->
+      <div class="absolute bottom-0 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-[440px] bg-parchment rounded-t-3xl sm:rounded-3xl shadow-2xl border-t-2 sm:border-2 border-saffron max-h-[90vh] flex flex-col overflow-hidden">
+        <!-- Header -->
+        <div class="bg-terracotta text-white px-4 py-3.5 flex items-center justify-between">
+          <div>
+            <h2 class="font-serif font-bold text-base sm:text-lg flex items-center gap-2">
+              <i class="fa-solid fa-sliders text-saffron-light"></i>
+              Manage Menu Items
+            </h2>
+            <p class="text-[11px] text-amber-200">Add or remove dishes in any category</p>
+          </div>
+          <button onclick="openMenuManager(false)" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <!-- Body -->
+        <div class="p-4 overflow-y-auto space-y-3.5 flex-1">
+          <!-- Section & Category Selectors -->
+          <div class="bg-white rounded-2xl p-3.5 border border-stone-200 shadow-xs space-y-3">
+            <div>
+              <label for="mgrSectionSelect" class="block text-[11px] font-bold uppercase tracking-wider text-terracotta mb-1">
+                1. Menu Section
+              </label>
+              <select
+                id="mgrSectionSelect"
+                onchange="handleManagerSectionChange()"
+                class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs font-semibold text-stone-800 bg-parchment focus:outline-none focus:border-saffron"
+              >
+                <option value="combos">Combo Packages (4 Full Menus)</option>
+                <option value="veg">Veg Menu — Part I (17 Categories)</option>
+                <option value="nonveg">Non-Veg Menu — Part II (14 Categories)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="mgrCategorySelect" class="block text-[11px] font-bold uppercase tracking-wider text-terracotta mb-1">
+                2. Select Category / Package
+              </label>
+              <select
+                id="mgrCategorySelect"
+                onchange="renderManagerItemsList()"
+                class="w-full px-3 py-2 rounded-xl border border-stone-200 text-xs font-medium text-stone-800 bg-white focus:outline-none focus:border-saffron"
+              >
+                <!-- Populated dynamically -->
+              </select>
+            </div>
+
+            <!-- Add New Item Form -->
+            <form onsubmit="handleAddMenuItem(event)" class="pt-1 border-t border-stone-100">
+              <label for="mgrNewItemInput" class="block text-[11px] font-bold uppercase tracking-wider text-terracotta mb-1">
+                3. Add New Item to Category
+              </label>
+              <div class="flex items-center gap-2">
+                <input
+                  id="mgrNewItemInput"
+                  type="text"
+                  placeholder="Enter new dish or item name..."
+                  class="flex-1 px-3 py-2 rounded-xl border border-stone-200 text-xs text-stone-800 placeholder-stone-400 focus:outline-none focus:border-saffron"
+                />
+                <button
+                  type="submit"
+                  class="shrink-0 px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold flex items-center gap-1.5 shadow-xs transition"
+                >
+                  <i class="fa-solid fa-plus"></i>
+                  <span>Add Item</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Current Category Items List -->
+          <div class="space-y-2">
+            <div class="flex items-center justify-between px-0.5">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-terracotta">
+                Category Items (<span id="mgrItemCount">0</span>)
+              </h3>
+              <button
+                type="button"
+                id="resetMenuBtn"
+                onclick="promptResetDefaultMenu()"
+                class="text-[11px] font-semibold text-stone-500 hover:text-red-600 transition"
+              >
+                <i class="fa-solid fa-rotate-left mr-1"></i>Reset Default Menu
+              </button>
+            </div>
+
+            <!-- Inline Reset Confirmation Banner (No window.confirm used) -->
+            <div id="resetConfirmBanner" class="hidden bg-red-50 border border-red-200 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs">
+              <span class="text-red-800 font-medium">Restore original 9-page default menu?</span>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onclick="confirmResetDefaultMenu()"
+                  class="px-2.5 py-1 rounded-lg bg-red-600 text-white font-bold hover:bg-red-700"
+                >
+                  Yes, Reset
+                </button>
+                <button
+                  type="button"
+                  onclick="cancelResetDefaultMenu()"
+                  class="px-2 py-1 rounded-lg bg-white text-stone-600 border border-stone-200 font-semibold"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+
+            <div id="mgrItemsListContainer" class="bg-white rounded-2xl border border-stone-200 divide-y divide-stone-100 max-h-64 overflow-y-auto">
+              <!-- Populated dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="p-3.5 bg-white border-t border-stone-200 flex items-center justify-between gap-2">
+          <span class="text-[11px] text-stone-500">
+            <i class="fa-solid fa-floppy-disk text-saffron mr-1"></i>Changes auto-save locally
+          </span>
+          <button
+            type="button"
+            onclick="openMenuManager(false)"
+            class="px-4 py-2 rounded-xl bg-terracotta hover:bg-terracotta-light text-white text-xs font-bold transition"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION (Replaces alert) -->
+    <div id="toastMsg" class="fixed top-24 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-opacity duration-200 bg-stone-900/95 text-white text-xs font-medium px-4 py-2 rounded-full shadow-lg flex items-center gap-2">
+      <i class="fa-solid fa-circle-check text-emerald-400"></i>
+      <span id="toastText">Added to shortlist</span>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // COMPLETE 9-PAGE MENU DATABASE FOR HEMANTH CATERING & COOKING SERVICES
+    // =========================================================================
+    const DEFAULT_MENU_DATA = {
+      combos: [
+        {
+          id: "combo-1",
+          title: "Combo Package 1: Traditional Veg. Menu",
+          badge: "18 Items",
+          subtitle: "Classic South Indian Traditional Feast",
+          items: [
+            "01. Sweet",
+            "02. Hot",
+            "03. Pulihora",
+            "04. Veg. Dum Biryani",
+            "05. Onion Raitha",
+            "06. Mixed Veg. Kurma",
+            "07. Gutti Vankaya Curry",
+            "08. Aloo Fry",
+            "09. Tomato Dal",
+            "10. Sambar",
+            "11. Plain Rice",
+            "12. Chutney",
+            "13. Pickle",
+            "14. Curd",
+            "15. Papads",
+            "16. Rasam",
+            "17. Sweet Pan",
+            "18. Cooling Water"
+          ]
+        },
+        {
+          id: "combo-2",
+          title: "Combo Package 2: Traditional Special Veg. Menu",
+          badge: "22 Items",
+          subtitle: "Expanded Feast with Dual Sweets, Podi + Ghee & Ice Cream",
+          items: [
+            "01. Veg. Salad",
+            "02. Sweet - 1",
+            "03. Sweet - 2",
+            "04. Veg. Biryani",
+            "05. Pudina Rice",
+            "06. Onion Raitha",
+            "07. Veg. Kurma",
+            "08. Veg. Fry",
+            "09. Vankaya Masala",
+            "10. Plain Rice",
+            "11. Tomato Dal",
+            "12. Sambar",
+            "13. Majjiga Pulusu",
+            "14. Chutney",
+            "15. Pickle",
+            "16. Papads",
+            "17. Podi + Ghee",
+            "18. Curd",
+            "19. Rasam",
+            "20. Sweet Pan",
+            "21. Ice Cream",
+            "22. Cooling Water"
+          ]
+        },
+        {
+          id: "combo-3",
+          title: "Combo Package 3: South Indian Premium Veg. Menu",
+          badge: "30 Items",
+          subtitle: "Includes Welcome Drinks, Live Tiffins (Idly/Dosa), Roti & Cut Fruits",
+          items: [
+            "01. Welcome Drinks",
+            "02. Sweet - 1",
+            "03. Sweet - 2",
+            "04. Hot",
+            "05. Biryani Rice",
+            "06. Onion Raitha",
+            "07. Veg Kurma",
+            "08. Veg. Fry - 1",
+            "09. Veg. Fry - 2",
+            "10. Gravy Curry",
+            "11. Dal Item",
+            "12. Sambar",
+            "13. Rasam",
+            "14. Papads",
+            "15. Chutney",
+            "16. Pickle",
+            "17. Curd",
+            "18. White Rice",
+            "19. Pan",
+            "20. Ice Cream",
+            "21. Cooling Water Bottles (with Glasses)",
+            "22. Veg. Salad",
+            "23. Cut Fruits",
+            "24. Roti",
+            "25. Idly",
+            "26. Dosa",
+            "27. Coconut Chutney",
+            "28. Ginger Chutney",
+            "29. Podi",
+            "30. Ghee"
+          ]
+        },
+        {
+          id: "combo-4",
+          title: "Combo Package 4: South Indian Special Veg. Menu",
+          badge: "41 Items",
+          subtitle: "Grand Royal Banquet with Ulava Charu, Dual Biryanis & Live Counters",
+          items: [
+            "01. Welcome Drinks",
+            "02. Veg. Soup",
+            "03. Veg Salad",
+            "04. Sweet - 1",
+            "05. Sweet - 2",
+            "06. Hot - 1",
+            "07. Hot - 2",
+            "08. Biryani Rice - 1",
+            "09. Biryani Rice - 2",
+            "10. Raitha",
+            "11. Veg. Kurma",
+            "12. Veg. Fry - 1",
+            "13. Veg. Fry - 2",
+            "14. Gravy Curry - 1",
+            "15. Gravy Curry - 2",
+            "16. Dal Item",
+            "17. Sambar",
+            "18. Rasam",
+            "19. Ulava Charu + Cream",
+            "20. Pachipulusu",
+            "21. Chutney",
+            "22. Pickle - 1",
+            "23. Pickle - 2",
+            "24. Podi",
+            "25. Ghee",
+            "26. Papads",
+            "27. Curd Chilli",
+            "28. Curd",
+            "29. White Rice",
+            "30. Paan",
+            "31. Ice Cream",
+            "32. Cut Fruits",
+            "33. Cooling Water Bottles (with Glasses)",
+            "34. Roti Item",
+            "35. Idly",
+            "36. Dosa",
+            "37. Upma",
+            "38. Dahi Vada",
+            "39. Coconut Chutney",
+            "40. Peanut Chutney",
+            "41. Ginger Chutney"
+          ]
+        }
+      ],
+
+      // PART I: VEGETARIAN (VEG) MENU (Pages 2–6)
+      veg: [
+        {
+          id: "veg-drinks",
+          title: "Welcome Drinks & Mocktails Counter",
+          page: "Page 2",
+          items: [
+            "Grape Juice", "Papaya Juice", "Orange Juice", "Pineapple Juice",
+            "Pulpy Mango Juice", "Pomegranate Juice", "Hyd. Kharbuja",
+            "Water Melon", "Fruit Punch", "Milk Shake", "Soft Drinks",
+            "Fresh Fruit Juice (Live)", "Sweet Lassi", "Mocktails Drinks Counter"
+          ]
+        },
+        {
+          id: "veg-soups",
+          title: "Soups",
+          page: "Page 2",
+          items: [
+            "Sweet Corn Soup", "Tomato Soup", "Hot & Sour Soup", "Coriander Soup",
+            "Cream of Mushroom Soup", "Cream of Baby Corn", "Tomato Carrot Soup",
+            "Vegetable Soup", "Veg. Lemon Coriander Soup", "Tomato Soup + Bread Pieces",
+            "Manchow Soup", "Carrot Ginger Soup"
+          ]
+        },
+        {
+          id: "veg-starters",
+          title: "Starters",
+          page: "Page 2",
+          items: [
+            "Baby Corn 65", "Baby Corn Manchurian", "Chilly Baby Corn",
+            "Fried Baby Corn", "Garlic Baby Corn (Wet & Dry)", "Corn Kernel",
+            "Butter Fried Mushroom", "Mushroom Chilly (Wet & Dry)",
+            "Mushroom Manchurian (Wet & Dry)", "Mushroom 65", "Pepper Mushroom",
+            "Chilly Paneer (Wet & Dry)", "Paneer 65", "Paneer Majestic",
+            "Veg. Manchurian (Wet & Dry)", "Crispy Vegetables",
+            "Fried Vegetables with Garlic Sauce", "Veg. Spring Rolls", "Roasted Papad"
+          ]
+        },
+        {
+          id: "veg-snacks",
+          title: "Evening Snacks",
+          page: "Page 2",
+          items: [
+            "Soft Pakoda", "Onion Pakoda", "Corn Samosa", "Onion Samosa",
+            "Aloo Samosa", "Mirchi Bajji", "Cut Bajji", "Veg. Cutlet",
+            "French Fries", "Paneer Tikka", "Tomato Sauce",
+            "Tea / Coffee / Milk", "Cooling Water"
+          ]
+        },
+        {
+          id: "veg-chaat",
+          title: "Chaat Counter",
+          page: "Page 2",
+          items: [
+            "Pani Puri", "Bhel Puri", "Dahi Puri", "Pav Bajji",
+            "Paneer Pav Bajji", "Noodles", "Jhal Muri", "Aloo Tikka",
+            "Mung Dal ka Masala", "Dahi Kachodi", "Samosa Choli Chat",
+            "Kadai Kachodi Chat", "Dahi Pani Chat", "Veg Cutlet Chat",
+            "Navaratan Chat", "Papidi Chat"
+          ]
+        },
+        {
+          id: "veg-sweets",
+          title: "Indian Sweets",
+          page: "Page 3",
+          items: [
+            "Chakkera Pongali", "Poornam Boori", "Bobbattu", "Kova Bobbattu",
+            "Halwa", "Mixed Halwa", "Gummadi Halwa", "Badam Halwa",
+            "Mixed Fruit Halwa", "Carrot Halwa", "Beetroot Halwa", "Sorakaya Halwa",
+            "Bread Halwa", "Dry Fruit Halwa", "Basundi", "Kova ka Meeta",
+            "Jalebi", "Ghee Jalebi", "Pineapple Jalebi", "Paneer Jalebi",
+            "Jangiri", "Malai Poori", "Rasmalai", "Angoor Rasmalai",
+            "Gulabjamun (Dry & Wet)", "Milk Mysore Pak", "Ghee Mysore Pak",
+            "Kaju Barfi", "Malai Sandwich", "Bengali Sweets", "Tava Sweets",
+            "Sweet Counter (10 Varieties)", "Ice Cream Burfi", "Kakinada Kaja",
+            "Ravva Kesari", "Kesari Poornalu", "Dry Fruit Poornam", "Laddu",
+            "Malai Chum Chum", "Ghee Mysore Pak (Special)", "Semiya Kesari",
+            "Besan Ladu", "Rasgulla", "Kalakand", "Junnu", "Agra Pan"
+          ]
+        },
+        {
+          id: "veg-breads",
+          title: "Indian Breads",
+          page: "Page 3",
+          items: [
+            "Rumali Roti", "Palak Rumali Roti", "Tandoori Roti", "Butter Roti",
+            "Plain Naan", "Butter Naan", "Garlic Naan", "Plain Kulcha",
+            "Stuffed Kulcha", "Masala Kulcha", "Palak Kulcha", "Tandoori Parota",
+            "Aloo Parota", "Meals Poori", "Palak Poori", "Pulka"
+          ]
+        },
+        {
+          id: "veg-hots",
+          title: "Hots",
+          page: "Page 3",
+          items: [
+            "Gold Coin", "Ajwain Pakoda", "Madras Pakoda", "Onion Mirapa Vada",
+            "Perugu Vada", "Masala Vada", "Bobbarla Vada", "Palak Vada",
+            "Saba Vada", "Punukula Avada", "Bread Avada", "Bread Bajji",
+            "Capsicum Bajji", "Mirchi Bajji", "Aratikaya Bajji", "Tamalapaku Bajji",
+            "Aloo Bajji", "Vegetable Bonda", "Veg. Cutlet", "Paneer Cutlet",
+            "Veg. Sandwich", "Paneer Sandwich", "Corn Roll", "Veg. Spring Roll",
+            "Palak Puri", "Corn Samosa", "Paneer Tikka", "Veg. Bullet",
+            "Palak Bullet", "Paneer Bullet", "Veg Lollipop", "Veg Kabab",
+            "Finger Chips", "Veg Manchuria"
+          ]
+        },
+        {
+          id: "veg-kurmas",
+          title: "Kurmas",
+          page: "Page 4",
+          items: [
+            "Aloo Kurma", "Chenna Aloo Kurma", "Aratikaya Kurma", "Mixed Veg. Kurma",
+            "Phool Makhana Kurma", "Pesara Punugulu Kurma", "Pesarattu Kurma",
+            "Meal Maker Kurma", "Pakoda Kurma", "Babycorn Kurma", "Double Beans Kurma",
+            "Mixed Veg. Butter Masala", "Paneer Butter Masala Kurma", "Mushroom Kurma",
+            "Sanagala Kurma", "Panasakaya Kurma", "Palak Paneer Kurma", "Cashew Kurma",
+            "Navaratan Kurma", "Paneer Green Peas Kurma", "Rajma Kurma",
+            "Thatimunjula Kurma", "Thotakura Liver Kurma", "Mirchi ka Salan Kurma",
+            "Vellulli Kurma", "Kofta Kurma", "Capsicum Kurma", "Paneer Capsicum Kurma",
+            "Manchurian Kurma", "Methi Chaman Kurma", "Green Peas Kurma", "Beetroot Kurma"
+          ]
+        },
+        {
+          id: "veg-raitha",
+          title: "Raitha",
+          page: "Page 4",
+          items: [
+            "Perugu Raitha", "Kheera Raitha", "Carrot Raitha", "Boondi Raitha",
+            "Cucumber Raitha", "Mixed Veg. Raitha", "Pudina Raitha", "Masala Raitha",
+            "Pineapple Raitha", "Onion Raitha", "Tomato Raitha", "Fruit Raitha",
+            "Aloo Raitha", "Majjiga Pulusu", "Bendakaya Majjiga Pulusu"
+          ]
+        },
+        {
+          id: "veg-curries",
+          title: "Veg Curries",
+          page: "Page 4",
+          items: [
+            "Mushroom Tomato Cashew Curry", "Paneer Capsicum Cashew Curry",
+            "Mulakkada Tomato Curry", "Vankaya Green Peas Curry", "Dosakaya Masala Curry",
+            "Vankaya Mulakkada Curry", "Mulakkada Cashew Curry", "Single Beans Tomato Curry",
+            "Double Beans Tomato Curry", "Beerakaya Senagapappu Curry", "Aloo Gobi Masala Curry",
+            "Panasakaya Gujju Curry", "Gutti Vankaya Masala Curry", "Mango Cashew Curry",
+            "Gobi Masala Curry", "Meal Maker Tomato Curry", "Chikkudukaya Curry",
+            "Baby Corn Masala Curry", "Green Peas Masala Curry", "Capsicum Masala Curry",
+            "Mushroom Masala Curry", "Malai Kofta Curry", "Methi Chaman Curry",
+            "Kadai Paneer Curry", "Palak Paneer Curry", "Paneer Butter Masala Curry",
+            "Mixed Vegetable Curry", "Kadai Vegetable Curry", "Capsicum Cashew Tomato Curry",
+            "Panasakaya Gongura Curry", "Phool Makhana Gongura Curry", "Mushroom Gongura Curry",
+            "Babycorn Gongura Curry", "Thotakura Liver Curry", "Panasakaya Cashew Curry",
+            "Kadai Veg. Curry", "Aratikaya Gujju Curry", "Guttu Dondakaya Curry",
+            "Kakara Bellam Curry", "Vankaya Senagapappu Curry", "Sorakaya Curry",
+            "Phool Makhana Mulakkada Curry", "Capsicum Dosakaya Curry", "Kanda Bachali Curry",
+            "Seema Chinthakaya Curry", "Gummadikaya Masala"
+          ]
+        },
+        {
+          id: "veg-fry",
+          title: "Fry Curries",
+          page: "Page 5",
+          items: [
+            "Aloo Carrot Beans Poriyal", "Aloo Karampoosa", "Aloo Cashew Kobbari Fry",
+            "Aloo Vankaya Menthi Fry", "Aloo Masala Fry", "Aratikaya Porutu",
+            "Kanda Porutu", "Kanda Karampoosa", "Cauliflower Pakoda", "Vankaya Pakoda",
+            "Capsicum Pakoda", "Palak Pakoda", "Vankaya Menthi Fry",
+            "Vankaya Green Peas Ginger Fry", "Stuffed Vankaya Fry", "Vankaya Ullikaram Fry",
+            "Bendakaya Cashew Fry", "Dondakaya Pakoda", "Dondakaya Kobbari Cashew Fry",
+            "Cabbage Kobbari Cashew Fry", "Carrot Cabbage Beans Fry", "Bendakaya Boondi Fry",
+            "Aratikaya Kobbari Fry", "Aratikaya Chips", "Chema Dumpala Fry",
+            "Panasa Pottu Fry", "Thotakura Liver Fry", "Kanda Liver Fry",
+            "Phool Makhana Liver Fry", "Meal Maker Liver Fry", "Mushroom Liver Fry",
+            "Phool Makhana Gongura Fry", "Meal Maker Kheema Fry", "Mushroom Pakoda",
+            "Mushroom Fry", "Akakarakaya Fry", "Navaratan Fry", "Gobi Fry",
+            "Cauliflower Fry", "Kobbari Senaga Pappu Fry", "Aloo Gobi Cashew Fry"
+          ]
+        },
+        {
+          id: "veg-rice",
+          title: "Rice Items",
+          page: "Page 5",
+          items: [
+            "Avakaya Muddapappu Annam", "Ragi Sangati", "Sambar Rice", "Steamed Rice",
+            "Curd Rice", "Carrot Rice", "Jeera Rice", "Palak Rice", "Tomato Rice",
+            "Coconut Rice", "Kothimeera Pudina Rice", "Lemon Fried Rice",
+            "Veg. Dum Fried Rice", "Chinese Fried Rice", "Schezwan Fried Rice",
+            "Dabbakaya Pulihora", "Tamarind Pulihora", "Mango Pulihora", "Lemon Pulihora",
+            "Semiya Pulihora", "Ravva Pulihora", "Chinta Chiguru Pulihora", "Avakai Pulihora",
+            "Mango Pulihora (Special)", "Semiya Pulao", "Veg. Pulao", "Kaju Pulao",
+            "Kabuli Pulao", "Capsicum Pulao", "Rajma Pulao", "Mughalai Pulao",
+            "Panasakaya Pulao", "Veg. Biryani", "Veg. Dum Biryani", "Mushroom Dum Biryani",
+            "Soya Keema Dum Biryani", "Gongura Biryani", "Dal Biryani", "Bread Biryani",
+            "Panasakaya Biryani", "Ulava Charu Biryani", "Paneer Dum Biryani",
+            "Pesara Liver Dum Biryani", "Punugula Biryani", "Karivepaku Biryani",
+            "Kabuli Chana Kofta Biryani", "Green Peas Biryani", "Almond Biryani",
+            "Babycorn Biryani", "Kashmiri Biryani", "Plain Biryani", "Paneer Biryani",
+            "Palak Biryani", "Veg. Manchurian Biryani", "Avakaya Biryani"
+          ]
+        },
+        {
+          id: "veg-dal",
+          title: "Dal Curries",
+          page: "Page 6",
+          items: [
+            "Plain Dal", "Mudda Pappu", "Tomato Dal", "Mango Dal", "Beerakaya Dal",
+            "Dosakaya Dal", "Anapakaya Dal", "Kobbari Senaga Dal", "Pancharatna Dal",
+            "Sweet Corn Dal", "Sorakaya Dal", "Lemon Dal", "Chinta Chiguru Dal",
+            "Thotakura Dal", "Palakura Dal", "Chukka Kura Dal", "Menthi Kura Dal",
+            "Gongura Dal", "Bachalakura Dal", "Mixed Akukura Dal", "Gongura Senaga Dal",
+            "Chow Chow Dal", "Dal Makhani", "Pesara Dal", "Dal Fry",
+            "Green Moong Dal", "Vaakay Dal"
+          ]
+        },
+        {
+          id: "veg-sambar",
+          title: "Sambar & Rasam",
+          page: "Page 6",
+          items: [
+            "Amaravathi Sambar", "Masala Sambar", "Tamilnadu Sambar", "Ulava Charu",
+            "Pappu Charu", "Tomato Rasam", "Beetroot Rasam", "Kothimeera Rasam",
+            "Miriyala Rasam", "Pappu Rasam", "Senaga Pappu Rasam", "Plain Rasam",
+            "Pineapple Rasam", "Majjiga Pulusu", "Vadiyalu Majjiga Pulusu",
+            "Anapakaya Pulusu", "Pachi Pulusu", "Garlic Pepper Rasam",
+            "Special Tomato Rasam", "Miriyala Charu"
+          ]
+        },
+        {
+          id: "veg-chutneys",
+          title: "Roti Pachallu (Chutneys)",
+          page: "Page 6",
+          items: [
+            "Tomato Chutney", "Coconut Chutney", "Peanut Chutney", "Beerakaya Chutney",
+            "Beerakaya Dondakaya Chutney", "Dondakaya Tomato Chutney", "Gongura Chutney",
+            "Potlakaya Chutney", "Mango Turumu Chutney", "Carrot Turumu Chutney",
+            "Beetroot Turumu Chutney", "Sorakaya Chutney", "Jamakaya Chutney",
+            "Allam Chutney", "Kothimeera Chutney", "Vankaya Tomato Chutney",
+            "Vankaya Dosakaya Chutney", "Ulli Chutney", "Pudina Chutney",
+            "Kandi Chutney", "Chintakaya Chutney", "Pandu Mirapakaya Chutney",
+            "Garlic Chutney"
+          ]
+        },
+        {
+          id: "veg-pickles",
+          title: "Veg. Pickles",
+          page: "Page 6",
+          items: [
+            "Avakaya Pickle", "Tomato Pickle", "Lemon Pickle", "Chintakaya Pickle",
+            "Ginger Pickle", "Gongura Pickle", "Pandu Mirchi Pickle",
+            "Bellam Avakaya Pickle", "Garlic Avakaya Pickle", "Dosa Avakaya Pickle",
+            "Carrot Avakaya Pickle", "Cauliflower Avakaya Pickle", "Mulakkada Avakaya Pickle",
+            "Kismis Avakaya Pickle", "Vellulli Cashew Avakaya Pickle",
+            "Dry Fruits Avakaya Pickle", "Small Ulli Avakaya Pickle",
+            "Green Chilli Avakaya Pickle", "Dondakaya Avakaya Pickle",
+            "Gobi Avakaya Pickle", "Green Apple Pickle", "Mixed Veg. Avakaya Pickle",
+            "Mixed Fruit Avakaya Pickle", "Dabbakaya Pickle", "Chikkudukaya Pickle",
+            "Usirikaya Avakaya Pickle"
+          ]
+        }
+      ],
+
+      // PART II: NON-VEGETARIAN (NON-VEG) MENU (Pages 7–9)
+      nonveg: [
+        {
+          id: "nv-soups",
+          title: "Non-Veg Soups",
+          page: "Page 7",
+          items: [
+            "Chicken Manchow Soup", "Chicken Corn Soup", "Chicken Hot & Sour Soup",
+            "Chicken Clear Soup", "Chicken Cantonese", "Chicken Lemon Coriander",
+            "Chettinad Chicken Soup", "Natu Kodi Soup", "Mutton Soup", "Attukal Soup"
+          ]
+        },
+        {
+          id: "nv-noodles",
+          title: "Non-Veg Noodles",
+          page: "Page 7",
+          items: [
+            "Egg Soft Noodles", "Chicken Soft Noodles", "Szechwan Chicken Noodles",
+            "Mutton Noodles", "Prawn Noodles", "Fish Noodles", "Mixed Non-Veg Soft Noodles"
+          ]
+        },
+        {
+          id: "nv-kebabs",
+          title: "Kebabs",
+          page: "Page 7",
+          items: [
+            "Chicken Tikka", "Kalmi Kebab", "Tandoori Chicken",
+            "Boti Kebab", "Chicken Malai Kebab", "Mutton Seekh Kebab"
+          ]
+        },
+        {
+          id: "nv-starters",
+          title: "Non-Veg Starters",
+          page: "Page 7",
+          items: [
+            "Spicy Egg Fry", "Chicken 65", "Chicken Rolls", "Chicken Chilli (Dry & Wet)",
+            "Chicken Chilli Pakoda", "Chicken Chilli Wings", "Chicken Drum Sticks",
+            "Chicken Lollypops", "Chicken Majestic", "Chicken Manchurian (Dry & Wet)",
+            "Chicken Schezwan (Dry & Wet)", "Chicken Spring Rolls", "Garlic Chicken (Dry & Wet)",
+            "Ginger Chicken (Dry & Wet)", "Pepper Chicken", "Mutton Kheema Balls",
+            "Chilli Fish", "Fish Apollo", "Ginger Fish", "Chilli Fried Prawns",
+            "Garlic Prawns", "Ginger Prawns", "Loose Prawns", "Lemon Garlic Butter Prawns"
+          ]
+        },
+        {
+          id: "nv-sherva",
+          title: "Sherva & Accompaniments",
+          page: "Page 7",
+          items: [
+            "Salad", "Perugu Chutney", "Chicken Sherva", "Chicken Majjiga Pulusu",
+            "Katta (Muslims)", "Rasam", "Ulava Charu"
+          ]
+        },
+        {
+          id: "nv-egg",
+          title: "Egg Curries",
+          page: "Page 8",
+          items: [
+            "Egg Masala", "Egg Pepper", "Egg Iguru", "Egg Onion Iguru",
+            "Egg Pulusu", "Kheema Egg", "Ulavacharu Egg", "Chettinad Egg Fry",
+            "Andhra Egg Curry"
+          ]
+        },
+        {
+          id: "nv-fish",
+          title: "Fish Curries",
+          page: "Page 8",
+          items: [
+            "Cheruvu Chepa Pulusu", "Fish Fry", "Fish Masala", "Boneless Fish Fry",
+            "Bommidayila Pulusu", "Apollo Fish", "Nethalla Curry", "Korameenu Pulusu",
+            "Vanjaram Vepudu", "Konam Fry", "Nellore Chepala Pulusu"
+          ]
+        },
+        {
+          id: "nv-prawns",
+          title: "Prawns Curries",
+          page: "Page 8",
+          items: [
+            "Prawns Roast", "Prawns Gongura", "Prawns Iguru", "Prawns Fry", "Chilli Prawns"
+          ]
+        },
+        {
+          id: "nv-crabs",
+          title: "Crabs Curries",
+          page: "Page 8",
+          items: [
+            "Crabs Iguru", "Crabs Curry", "Crab Masala Fry", "Chettinad Crab Curry", "Black Pepper Crab"
+          ]
+        },
+        {
+          id: "nv-chicken",
+          title: "Chicken Curries",
+          page: "Page 8",
+          items: [
+            "Chicken Fry Andhra Style", "Chicken Pakoda", "Chicken Manchurian",
+            "Chicken 65", "Chicken Lollipop", "Chicken Wings", "Chicken Half Legs",
+            "Chicken Roast", "Chicken Joint", "Chicken Curry", "Chicken Masala Curry",
+            "Chicken Dopiaza (Dhowpeja)", "Chicken Chettinad", "Chicken Kurma",
+            "Chilli Chicken", "Ginger Chicken", "Boneless Chicken Fry",
+            "Butter Chicken Masala", "Kadai Chicken", "Natukodi Iguru",
+            "Natukodi Pulusu", "Natukodi Fry"
+          ]
+        },
+        {
+          id: "nv-mutton",
+          title: "Mutton Curries",
+          page: "Page 8",
+          items: [
+            "Mutton Curry", "Mutton Kurma", "Mutton Iguru", "Mutton Fry",
+            "Mutton Roast", "Mutton Mughlai", "Mutton Gongura", "Mutton Chintaaku",
+            "Mutton Kheema", "Mutton Garlic", "Mulakkada Mutton", "Boneless Mutton",
+            "Mango Mutton", "Talakaya Mamsam", "Boti Gongura"
+          ]
+        },
+        {
+          id: "nv-pulao",
+          title: "Non-Veg Pulao",
+          page: "Page 9",
+          items: [
+            "Chicken Pulao", "Chicken Fry Piece Pulao", "Chicken Boneless Pulao",
+            "Natukodi Pulao", "Natukodi Fry Piece Pulao", "Emu Kodi Pulao",
+            "Mutton Pulao", "Mutton Dum Masala Pulao", "Mutton Kheema Pulao",
+            "Rajula Pulao", "Amaravathi Pulao", "Prawns Pulao"
+          ]
+        },
+        {
+          id: "nv-friedrice",
+          title: "Non-Veg Fried Rice",
+          page: "Page 9",
+          items: [
+            "Egg Fried Rice", "Schezwan Egg Fried Rice", "Mixed Fried Rice",
+            "Chicken Fried Rice", "Mutton Fried Rice", "Prawns Fried Rice",
+            "Schezwan Chicken Fried Rice"
+          ]
+        },
+        {
+          id: "nv-biryani",
+          title: "Non-Veg Biryani",
+          page: "Page 9",
+          items: [
+            "Egg Biryani", "Ulavacharu Egg Biryani", "Chicken Biryani",
+            "Chicken Dum Biryani", "Boneless Chicken Dum Biryani", "Chicken Fry Biryani",
+            "Ambur Chicken Biryani", "Andhra Chicken Biryani", "Butter Chicken Biryani",
+            "Avakaya Chicken Biryani", "Chettinad Chicken Biryani", "Hyderabadi Chicken Biryani",
+            "Ulavacharu Chicken Biryani", "Mutton Biryani", "Chettinad Mutton Biryani",
+            "Kheema Biryani", "Hyderabadi Mutton Dum Biryani", "Mutton Dum Biryani",
+            "Mixed Biryani", "Turkey Biryani", "Egg Roast Biryani", "Fish Biryani",
+            "Prawns Biryani", "Muslim Biryani", "Avakaya Mutton Biryani",
+            "Hyderabad Bawarchi Style Biryani"
+          ]
+        }
+      ]
+    };
+
+    const STORAGE_KEY = "hemanth_catering_menu_v1";
+
+    function loadMenuData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed && parsed.combos && parsed.veg && parsed.nonveg) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        // Fallback to default data if storage is unavailable
+      }
+      return JSON.parse(JSON.stringify(DEFAULT_MENU_DATA));
+    }
+
+    function saveMenuData() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(MENU_DATA));
+      } catch (e) {
+        // Ignore storage quota issues
+      }
+    }
+
+    let MENU_DATA = loadMenuData();
+
+    // =========================================================================
+    // APPLICATION STATE
+    // =========================================================================
+    let activeTab = "combos"; // 'combos' | 'veg' | 'nonveg'
+    let activeSubFilter = "all"; // 'all' or specific category id
+    let searchQuery = "";
+    let openAccordions = new Set(["combo-1", "veg-drinks", "veg-sweets", "nv-starters", "nv-biryani"]);
+    // Map of key -> { id, name, category, type }
+    let shortlist = new Map();
+    let isCommentsOpen = false;
+    let isHeaderAdminRevealed = false;
+
+    // =========================================================================
+    // INITIALIZATION & HEADER SWIPE GESTURE DETECTION
+    // =========================================================================
+    window.addEventListener("DOMContentLoaded", () => {
+      initHeaderSwipeGesture();
+      renderSubFilters();
+      renderContent();
+      updateShortlistUI();
+    });
+
+    function initHeaderSwipeGesture() {
+      const swipeArea = document.getElementById("headerSwipeArea");
+      if (!swipeArea) return;
+
+      let startX = 0;
+      let startY = 0;
+      let isTracking = false;
+
+      // Touch events for mobile/tablet
+      swipeArea.addEventListener(
+        "touchstart",
+        (e) => {
+          if (e.touches.length !== 1) return;
+          startX = e.touches[0].clientX;
+          startY = e.touches[0].clientY;
+          isTracking = true;
+        },
+        { passive: true }
+      );
+
+      swipeArea.addEventListener(
+        "touchend",
+        (e) => {
+          if (!isTracking || e.changedTouches.length !== 1) return;
+          const endX = e.changedTouches[0].clientX;
+          const endY = e.changedTouches[0].clientY;
+          handleHeaderSwipeDelta(endX - startX, endY - startY);
+          isTracking = false;
+        },
+        { passive: true }
+      );
+
+      // Mouse drag fallback for desktop testing
+      swipeArea.addEventListener("mousedown", (e) => {
+        if (e.button !== 0) return;
+        startX = e.clientX;
+        startY = e.clientY;
+        isTracking = true;
+      });
+
+      window.addEventListener("mouseup", (e) => {
+        if (!isTracking) return;
+        handleHeaderSwipeDelta(e.clientX - startX, e.clientY - startY);
+        isTracking = false;
+      });
+
+      // Keyboard accessibility shortcut (Alt + M)
+      window.addEventListener("keydown", (e) => {
+        if (e.altKey && (e.key === "m" || e.key === "M")) {
+          e.preventDefault();
+          toggleHeaderAdminBtn();
+        }
+      });
+    }
+
+    function handleHeaderSwipeDelta(deltaX, deltaY) {
+      // Ensure horizontal swipe dominates vertical scroll and passes 40px threshold
+      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
+        if (deltaX < 0) {
+          // Swiped Right-to-Left -> Show hidden Manage Menu button
+          setHeaderAdminRevealed(true);
+        } else {
+          // Swiped Left-to-Right -> Hide Manage Menu button
+          setHeaderAdminRevealed(false);
+        }
+      }
+    }
+
+    function setHeaderAdminRevealed(revealed) {
+      const wrapper = document.getElementById("hiddenMenuActionWrapper");
+      if (!wrapper) return;
+      isHeaderAdminRevealed = revealed;
+
+      if (revealed) {
+        wrapper.classList.remove("max-w-0", "opacity-0", "translate-x-3", "pointer-events-none");
+        wrapper.classList.add("max-w-[160px]", "opacity-100", "translate-x-0", "pointer-events-auto");
+      } else {
+        wrapper.classList.add("max-w-0", "opacity-0", "translate-x-3", "pointer-events-none");
+        wrapper.classList.remove("max-w-[160px]", "opacity-100", "translate-x-0", "pointer-events-auto");
+      }
+    }
+
+    function toggleHeaderAdminBtn() {
+      setHeaderAdminRevealed(!isHeaderAdminRevealed);
+    }
+
+    // =========================================================================
+    // MANAGE MENU MODAL (ADD & REMOVE ITEMS IN EACH CATEGORY)
+    // =========================================================================
+    function openMenuManager(open) {
+      const modal = document.getElementById("menuManagerModal");
+      if (!modal) return;
+
+      if (open) {
+        const sectionSelect = document.getElementById("mgrSectionSelect");
+        sectionSelect.value = activeTab;
+        handleManagerSectionChange();
+        cancelResetDefaultMenu();
+        modal.classList.remove("hidden");
+      } else {
+        modal.classList.add("hidden");
+      }
+    }
+
+    function handleManagerSectionChange() {
+      const section = document.getElementById("mgrSectionSelect").value;
+      const catSelect = document.getElementById("mgrCategorySelect");
+      const list = MENU_DATA[section] || [];
+
+      catSelect.innerHTML = list
+        .map((cat) => `<option value="${cat.id}">${cat.title} (${cat.items.length})</option>`)
+        .join("");
+
+      // Pre-select active sub-filter category if it belongs to this section
+      if (activeSubFilter !== "all" && list.some((c) => c.id === activeSubFilter)) {
+        catSelect.value = activeSubFilter;
+      }
+
+      renderManagerItemsList();
+    }
+
+    function renderManagerItemsList() {
+      const section = document.getElementById("mgrSectionSelect").value;
+      const catId = document.getElementById("mgrCategorySelect").value;
+      const category = (MENU_DATA[section] || []).find((c) => c.id === catId);
+      const container = document.getElementById("mgrItemsListContainer");
+      const countEl = document.getElementById("mgrItemCount");
+
+      if (!category) {
+        countEl.textContent = "0";
+        container.innerHTML = `<div class="p-4 text-center text-xs text-stone-500">No category selected.</div>`;
+        return;
+      }
+
+      countEl.textContent = category.items.length;
+
+      if (category.items.length === 0) {
+        container.innerHTML = `
+          <div class="p-5 text-center text-xs text-stone-500">
+            No items in this category yet. Use the field above to add items.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = category.items
+        .map((item, idx) => {
+          const num = String(idx + 1).padStart(2, "0");
+          return `
+            <div class="px-3.5 py-2.5 flex items-center justify-between gap-2 hover:bg-amber-50/40 transition">
+              <div class="flex items-baseline gap-2 min-w-0">
+                <span class="text-[11px] font-bold text-saffron shrink-0">${num}.</span>
+                <span class="text-xs font-medium text-stone-800 break-words">${escapeHTML(item)}</span>
+              </div>
+              <button
+                type="button"
+                onclick="handleRemoveMenuItem('${section}', '${catId}', ${idx})"
+                title="Remove item"
+                class="shrink-0 w-7 h-7 rounded-lg bg-red-50 hover:bg-red-600 text-red-600 hover:text-white flex items-center justify-center transition active:scale-90"
+              >
+                <i class="fa-solid fa-trash-can text-[11px]"></i>
+              </button>
+            </div>
+          `;
+        })
+        .join("");
+    }
+
+    function handleAddMenuItem(e) {
+      e.preventDefault();
+      const section = document.getElementById("mgrSectionSelect").value;
+      const catId = document.getElementById("mgrCategorySelect").value;
+      const input = document.getElementById("mgrNewItemInput");
+      let rawName = input.value.trim();
+
+      if (!rawName) {
+        showToast("Please enter an item name");
+        input.focus();
+        return;
+      }
+
+      const category = (MENU_DATA[section] || []).find((c) => c.id === catId);
+      if (!category) return;
+
+      // For combo packages, automatically prefix with the next 2-digit item number if not already numbered
+      if (section === "combos" && !/^\d+\.\s*/.test(rawName)) {
+        const nextNum = String(category.items.length + 1).padStart(2, "0");
+        rawName = `${nextNum}. ${rawName}`;
+      }
+
+      // Prevent exact duplicate in the same category
+      const exists = category.items.some((i) => i.toLowerCase() === rawName.toLowerCase());
+      if (exists) {
+        showToast("Item already exists in this category");
+        input.focus();
+        return;
+      }
+
+      category.items.push(rawName);
+      if (section === "combos") {
+        category.badge = `${category.items.length} Items`;
+      }
+
+      saveMenuData();
+      input.value = "";
+      openAccordions.add(catId);
+
+      // Refresh manager dropdown count, manager list, and main UI
+      const selectedCatId = catId;
+      handleManagerSectionChange();
+      document.getElementById("mgrCategorySelect").value = selectedCatId;
+      renderManagerItemsList();
+      renderSubFilters();
+      renderContent();
+      showToast(`Added "${rawName}"`);
+    }
+
+    function handleRemoveMenuItem(section, catId, itemIndex) {
+      const category = (MENU_DATA[section] || []).find((c) => c.id === catId);
+      if (!category || itemIndex < 0 || itemIndex >= category.items.length) return;
+
+      const removedName = category.items[itemIndex];
+      category.items.splice(itemIndex, 1);
+
+      if (section === "combos") {
+        // Re-number combo items cleanly and update badge
+        category.items = category.items.map((item, idx) => {
+          const cleanLabel = item.replace(/^\d+\.\s*/, "");
+          return `${String(idx + 1).padStart(2, "0")}. ${cleanLabel}`;
+        });
+        category.badge = `${category.items.length} Items`;
+      }
+
+      // Remove from active shortlist if present
+      const dishKey = `${catId}::${removedName}`;
+      if (shortlist.has(dishKey)) {
+        shortlist.delete(dishKey);
+        updateShortlistUI();
+      }
+
+      saveMenuData();
+
+      // Refresh manager dropdown count, manager list, and main UI
+      handleManagerSectionChange();
+      document.getElementById("mgrCategorySelect").value = catId;
+      renderManagerItemsList();
+      renderSubFilters();
+      renderContent();
+      showToast(`Removed "${removedName}"`);
+    }
+
+    function promptResetDefaultMenu() {
+      document.getElementById("resetConfirmBanner").classList.remove("hidden");
+    }
+
+    function cancelResetDefaultMenu() {
+      document.getElementById("resetConfirmBanner").classList.add("hidden");
+    }
+
+    function confirmResetDefaultMenu() {
+      MENU_DATA = JSON.parse(JSON.stringify(DEFAULT_MENU_DATA));
+      saveMenuData();
+      cancelResetDefaultMenu();
+      handleManagerSectionChange();
+      renderSubFilters();
+      renderContent();
+      showToast("Restored default 9-page menu");
+    }
+
+    function escapeHTML(str) {
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    // =========================================================================
+    // VIEWPORT MODE TOGGLE (DESKTOP ONLY)
+    // =========================================================================
+    function setViewportMode(mode) {
+      const shell = document.getElementById("appShell");
+      const btnMobile = document.getElementById("btnMobileFrame");
+      const btnFull = document.getElementById("btnFullWidth");
+      const floatBar = document.getElementById("floatingBar");
+
+      if (mode === "full") {
+        shell.classList.remove("md:max-w-[440px]", "md:my-3", "md:rounded-[2rem]", "md:border-[6px]", "md:border-stone-800");
+        shell.classList.add("md:max-w-4xl", "md:my-2", "md:rounded-2xl", "md:border", "md:border-stone-300");
+        floatBar.classList.remove("max-w-[416px]");
+        floatBar.classList.add("max-w-3xl");
+
+        btnFull.classList.add("bg-terracotta", "text-white", "font-semibold");
+        btnFull.classList.remove("text-stone-600");
+        btnMobile.classList.remove("bg-terracotta", "text-white", "font-semibold");
+        btnMobile.classList.add("text-stone-600");
+      } else {
+        shell.classList.add("md:max-w-[440px]", "md:my-3", "md:rounded-[2rem]", "md:border-[6px]", "md:border-stone-800");
+        shell.classList.remove("md:max-w-4xl", "md:my-2", "md:rounded-2xl", "md:border", "md:border-stone-300");
+        floatBar.classList.add("max-w-[416px]");
+        floatBar.classList.remove("max-w-3xl");
+
+        btnMobile.classList.add("bg-terracotta", "text-white", "font-semibold");
+        btnMobile.classList.remove("text-stone-600");
+        btnFull.classList.remove("bg-terracotta", "text-white", "font-semibold");
+        btnFull.classList.add("text-stone-600");
+      }
+    }
+
+    // =========================================================================
+    // TAB & SUB-FILTER NAVIGATION
+    // =========================================================================
+    function switchTab(tab) {
+      activeTab = tab;
+      activeSubFilter = "all";
+
+      // Update Tab Button Styles
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.remove("bg-terracotta", "text-white", "shadow-sm");
+        btn.classList.add("text-stone-700", "hover:bg-white/70");
+        const subSpan = btn.querySelector("span:last-child");
+        if (subSpan) {
+          subSpan.classList.remove("opacity-85", "text-white");
+          subSpan.classList.add("text-stone-500");
+        }
+      });
+
+      const activeBtn = document.getElementById(`tab-${tab}`);
+      activeBtn.classList.add("bg-terracotta", "text-white", "shadow-sm");
+      activeBtn.classList.remove("text-stone-700", "hover:bg-white/70");
+      const activeSubSpan = activeBtn.querySelector("span:last-child");
+      if (activeSubSpan) {
+        activeSubSpan.classList.remove("text-stone-500");
+        activeSubSpan.classList.add("opacity-85");
+      }
+
+      renderSubFilters();
+      renderContent();
+    }
+
+    function selectSubFilter(filterId) {
+      activeSubFilter = filterId;
+      if (filterId !== "all") {
+        openAccordions.add(filterId);
+      }
+      renderSubFilters();
+      renderContent();
+    }
+
+    function renderSubFilters() {
+      const container = document.getElementById("subFilterContainer");
+      if (searchQuery.trim().length > 0) {
+        container.innerHTML = `
+          <div class="text-[11px] font-medium text-terracotta px-1 py-0.5 flex items-center gap-1.5">
+            <i class="fa-solid fa-filter text-saffron"></i>
+            <span>Showing search matches across all menu sections</span>
+          </div>
+        `;
+        return;
+      }
+
+      const list = MENU_DATA[activeTab];
+      let pillsHTML = `
+        <button
+          onclick="selectSubFilter('all')"
+          class="shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition border ${
+            activeSubFilter === "all"
+              ? "bg-saffron text-white border-saffron shadow-xs"
+              : "bg-white text-stone-700 border-stone-200 hover:border-saffron/60"
+          }"
+        >
+          All (${list.length})
+        </button>
+      `;
+
+      list.forEach((cat) => {
+        const shortLabel = cat.title.replace(/^Combo Package \d+:\s*/i, "");
+        const isSelected = activeSubFilter === cat.id;
+        pillsHTML += `
+          <button
+            onclick="selectSubFilter('${cat.id}')"
+            class="shrink-0 px-3 py-1.5 rounded-full text-xs font-medium transition border ${
+              isSelected
+                ? "bg-saffron text-white border-saffron font-semibold shadow-xs"
+                : "bg-white text-stone-700 border-stone-200 hover:border-saffron/60"
+            }"
+          >
+            ${shortLabel}
+          </button>
+        `;
+      });
+
+      container.innerHTML = pillsHTML;
+    }
+
+    // =========================================================================
+    // SEARCH LOGIC
+    // =========================================================================
+    function handleSearch(val) {
+      searchQuery = val;
+      const clearBtn = document.getElementById("clearSearchBtn");
+      if (searchQuery.trim().length > 0) {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
+      renderSubFilters();
+      renderContent();
+    }
+
+    function clearSearch() {
+      const input = document.getElementById("searchInput");
+      input.value = "";
+      handleSearch("");
+      input.focus();
+    }
+
+    // =========================================================================
+    // RENDER MENU CONTENT (COMBOS / VEG / NON-VEG / SEARCH RESULTS)
+    // =========================================================================
+    function renderContent() {
+      const container = document.getElementById("menuContent");
+      const query = searchQuery.trim().toLowerCase();
+
+      // CASE 1: Global Live Search Active
+      if (query.length > 0) {
+        renderSearchResults(container, query);
+        return;
+      }
+
+      // CASE 2: Combo Packages Tab
+      if (activeTab === "combos") {
+        const combos =
+          activeSubFilter === "all"
+            ? MENU_DATA.combos
+            : MENU_DATA.combos.filter((c) => c.id === activeSubFilter);
+
+        let html = `
+          <div class="flex items-center justify-between px-0.5">
+            <div>
+              <h2 class="font-serif font-bold text-base text-terracotta">Traditional &amp; Special Combo Packages</h2>
+              <p class="text-[11px] text-stone-500">Complete curated catering packages (Page 1)</p>
+            </div>
+            <button onclick="toggleAllAccordions('combos')" class="text-[11px] font-semibold text-saffron hover:underline">
+              Expand/Collapse All
+            </button>
+          </div>
+        `;
+
+        combos.forEach((pkg) => {
+          const isOpen = openAccordions.has(pkg.id);
+          const pkgKey = `pkg::${pkg.id}`;
+          const isPkgAdded = shortlist.has(pkgKey);
+
+          html += `
+            <div class="bg-white rounded-2xl border border-stone-200/90 shadow-xs overflow-hidden transition">
+              <!-- Card Header -->
+              <div class="p-3.5 bg-gradient-to-r from-amber-50/90 to-white border-b border-stone-100">
+                <div class="flex items-start justify-between gap-2.5">
+                  <div onclick="toggleAccordion('${pkg.id}')" class="cursor-pointer flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <span class="px-2 py-0.5 rounded-full bg-terracotta text-amber-100 text-[10px] font-bold tracking-wide">
+                        ${pkg.badge}
+                      </span>
+                      <span class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span> Pure Veg
+                      </span>
+                    </div>
+                    <h3 class="font-serif font-bold text-sm sm:text-base text-terracotta leading-snug">
+                      ${pkg.title}
+                    </h3>
+                    <p class="text-[11px] text-stone-500 mt-0.5">${pkg.subtitle}</p>
+                  </div>
+
+                  <!-- Add Entire Package Button -->
+                  <button
+                    onclick="toggleShortlistItem('${pkgKey}', '${escapeQuotes(pkg.title)}', 'Combo Package (${pkg.badge})', 'veg')"
+                    class="shrink-0 px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs ${
+                      isPkgAdded
+                        ? "bg-emerald-600 text-white"
+                        : "bg-saffron-pale hover:bg-amber-200 text-terracotta border border-amber-300"
+                    }"
+                  >
+                    <i class="fa-solid ${isPkgAdded ? "fa-check" : "fa-plus"}"></i>
+                    <span>${isPkgAdded ? "Added" : "Select"}</span>
+                  </button>
+                </div>
+
+                <!-- Accordion Trigger Bar -->
+                <button
+                  onclick="toggleAccordion('${pkg.id}')"
+                  class="mt-2.5 w-full pt-2 border-t border-stone-100 flex items-center justify-between text-xs font-semibold text-stone-600 hover:text-terracotta"
+                >
+                  <span>${isOpen ? "Hide Package Items" : `View All ${pkg.items.length} Included Items`}</span>
+                  <i class="fa-solid fa-chevron-down text-[11px] transition-transform duration-200 ${isOpen ? "rotate-180" : ""}"></i>
+                </button>
+              </div>
+
+              <!-- Collapsible Items Grid -->
+              <div class="${isOpen ? "block" : "hidden"} p-3.5 bg-parchment/50">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                  ${pkg.items
+                    .map(
+                      (item) => `
+                    <div class="flex items-center gap-2 px-2.5 py-1.5 rounded-lg bg-white border border-stone-100 text-xs text-stone-700">
+                      <i class="fa-solid fa-circle-check text-saffron text-[10px] shrink-0"></i>
+                      <span class="font-medium">${item}</span>
+                    </div>
+                  `
+                    )
+                    .join("")}
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        return;
+      }
+
+      // CASE 3: Veg Menu (Part I) or Non-Veg Menu (Part II)
+      const isVeg = activeTab === "veg";
+      const categories =
+        activeSubFilter === "all"
+          ? MENU_DATA[activeTab]
+          : MENU_DATA[activeTab].filter((c) => c.id === activeSubFilter);
+
+      let html = `
+        <div class="flex items-center justify-between px-0.5">
+          <div>
+            <h2 class="font-serif font-bold text-base text-terracotta flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-xs border ${isVeg ? "border-emerald-600" : "border-red-600"} flex items-center justify-center">
+                <span class="w-1.5 h-1.5 rounded-full ${isVeg ? "bg-emerald-600" : "bg-red-600"}"></span>
+              </span>
+              ${isVeg ? "Part I: Vegetarian (Veg) Menu" : "Part II: Non-Vegetarian Menu"}
+            </h2>
+            <p class="text-[11px] text-stone-500">Tap any category to expand &amp; '+' to shortlist dishes</p>
+          </div>
+          <button onclick="toggleAllAccordions('${activeTab}')" class="text-[11px] font-semibold text-saffron hover:underline shrink-0">
+            Expand/Collapse
+          </button>
+        </div>
+      `;
+
+      categories.forEach((cat) => {
+        const isOpen = openAccordions.has(cat.id);
+        html += `
+          <div class="bg-white rounded-2xl border border-stone-200/90 shadow-xs overflow-hidden">
+            <!-- Accordion Header -->
+            <button
+              onclick="toggleAccordion('${cat.id}')"
+              class="w-full px-3.5 py-3 flex items-center justify-between gap-2 text-left hover:bg-amber-50/40 transition"
+            >
+              <div class="flex items-center gap-2.5 min-w-0">
+                <span class="w-2.5 h-2.5 rounded-xs border ${isVeg ? "border-emerald-600" : "border-red-600"} flex items-center justify-center shrink-0">
+                  <span class="w-1.5 h-1.5 rounded-full ${isVeg ? "bg-emerald-600" : "bg-red-600"}"></span>
+                </span>
+                <div class="min-w-0">
+                  <h3 class="font-serif font-bold text-sm sm:text-base text-terracotta truncate">${cat.title}</h3>
+                  <span class="text-[10px] text-stone-400">${cat.page}</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 shrink-0">
+                <span class="px-2.5 py-0.5 rounded-full bg-parchment-dark text-terracotta text-[11px] font-bold border border-stone-200">
+                  ${cat.items.length}
+                </span>
+                <i class="fa-solid fa-chevron-down text-xs text-stone-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-terracotta" : ""}"></i>
+              </div>
+            </button>
+
+            <!-- Accordion Dish List -->
+            <div class="${isOpen ? "block" : "hidden"} border-t border-stone-100 divide-y divide-stone-100 bg-parchment/30">
+              ${cat.items
+                .map((dish, idx) => {
+                  const num = String(idx + 1).padStart(2, "0");
+                  const dishKey = `${cat.id}::${dish}`;
+                  const isAdded = shortlist.has(dishKey);
+                  return `
+                    <div class="px-3.5 py-2.5 flex items-center justify-between gap-2.5 hover:bg-white transition">
+                      <div class="flex items-baseline gap-2 min-w-0">
+                        <span class="text-[11px] font-bold text-saffron shrink-0">${num}.</span>
+                        <span class="text-xs sm:text-sm font-medium text-stone-800 leading-snug">${dish}</span>
+                      </div>
+                      <button
+                        onclick="toggleShortlistItem('${escapeQuotes(dishKey)}', '${escapeQuotes(dish)}', '${escapeQuotes(cat.title)}', '${isVeg ? "veg" : "nonveg"}')"
+                        class="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold transition active:scale-90 ${
+                          isAdded
+                            ? "bg-emerald-600 text-white shadow-xs"
+                            : "bg-white hover:bg-saffron-pale text-terracotta border border-stone-200"
+                        }"
+                        aria-label="Add ${dish}"
+                      >
+                        <i class="fa-solid ${isAdded ? "fa-check" : "fa-plus"}"></i>
+                      </button>
+                    </div>
+                  `;
+                })
+                .join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // =========================================================================
+    // RENDER GLOBAL SEARCH RESULTS
+    // =========================================================================
+    function renderSearchResults(container, query) {
+      let matches = [];
+
+      // Search Combos
+      MENU_DATA.combos.forEach((pkg) => {
+        const matchedItems = pkg.items.filter((i) => i.toLowerCase().includes(query));
+        if (pkg.title.toLowerCase().includes(query) || matchedItems.length > 0) {
+          matches.push({
+            section: "Combo Package",
+            category: pkg.title,
+            catId: pkg.id,
+            type: "veg",
+            items: matchedItems.length > 0 ? matchedItems : pkg.items.slice(0, 4)
+          });
+        }
+      });
+
+      // Search Veg
+      MENU_DATA.veg.forEach((cat) => {
+        const matchedItems = cat.items.filter((i) => i.toLowerCase().includes(query));
+        if (matchedItems.length > 0) {
+          matches.push({
+            section: "Veg Menu (Part I)",
+            category: cat.title,
+            catId: cat.id,
+            type: "veg",
+            items: matchedItems
+          });
+        }
+      });
+
+      // Search Non-Veg
+      MENU_DATA.nonveg.forEach((cat) => {
+        const matchedItems = cat.items.filter((i) => i.toLowerCase().includes(query));
+        if (matchedItems.length > 0) {
+          matches.push({
+            section: "Non-Veg Menu (Part II)",
+            category: cat.title,
+            catId: cat.id,
+            type: "nonveg",
+            items: matchedItems
+          });
+        }
+      });
+
+      if (matches.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white rounded-2xl p-8 text-center border border-stone-200 space-y-2">
+            <div class="w-12 h-12 rounded-full bg-amber-50 text-saffron mx-auto flex items-center justify-center text-lg">
+              <i class="fa-solid fa-bowl-food"></i>
+            </div>
+            <h3 class="font-serif font-bold text-terracotta">No matching dishes found</h3>
+            <p class="text-xs text-stone-500">Try searching for "Biryani", "Paneer", "Vankaya", "Halwa", "Chicken", or "Prawns".</p>
+            <button onclick="clearSearch()" class="mt-2 px-4 py-1.5 rounded-full bg-terracotta text-white text-xs font-semibold">
+              Reset Search
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      const totalFound = matches.reduce((sum, m) => sum + m.items.length, 0);
+      let html = `
+        <div class="flex items-center justify-between px-1">
+          <span class="text-xs font-bold text-terracotta">Found ${totalFound} matching dishes</span>
+          <button onclick="clearSearch()" class="text-xs font-semibold text-saffron hover:underline">Clear</button>
+        </div>
+      `;
+
+      matches.forEach((group) => {
+        const isVeg = group.type === "veg";
+        html += `
+          <div class="bg-white rounded-2xl border border-stone-200 shadow-xs overflow-hidden">
+            <div class="px-3.5 py-2.5 bg-parchment-dark/70 border-b border-stone-200/70 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold uppercase tracking-wider ${isVeg ? "text-emerald-700" : "text-red-700"}">
+                  ${group.section}
+                </span>
+                <h3 class="font-serif font-bold text-sm text-terracotta">${group.category}</h3>
+              </div>
+              <span class="text-[11px] font-bold px-2 py-0.5 rounded-full bg-white text-stone-600 border border-stone-200">
+                ${group.items.length}
+              </span>
+            </div>
+            <div class="divide-y divide-stone-100">
+              ${group.items
+                .map((dish) => {
+                  const dishKey = `${group.catId}::${dish}`;
+                  const isAdded = shortlist.has(dishKey);
+                  return `
+                    <div class="px-3.5 py-2.5 flex items-center justify-between gap-2">
+                      <div class="flex items-center gap-2 min-w-0">
+                        <span class="w-2.5 h-2.5 rounded-xs border ${isVeg ? "border-emerald-600" : "border-red-600"} flex items-center justify-center shrink-0">
+                          <span class="w-1.5 h-1.5 rounded-full ${isVeg ? "bg-emerald-600" : "bg-red-600"}"></span>
+                        </span>
+                        <span class="text-xs sm:text-sm font-medium text-stone-800">${highlightText(dish, searchQuery)}</span>
+                      </div>
+                      <button
+                        onclick="toggleShortlistItem('${escapeQuotes(dishKey)}', '${escapeQuotes(dish)}', '${escapeQuotes(group.category)}', '${group.type}')"
+                        class="shrink-0 w-8 h-8 rounded-xl flex items-center justify-center text-xs font-bold transition ${
+                          isAdded
+                            ? "bg-emerald-600 text-white"
+                            : "bg-parchment hover:bg-saffron-pale text-terracotta border border-stone-200"
+                        }"
+                      >
+                        <i class="fa-solid ${isAdded ? "fa-check" : "fa-plus"}"></i>
+                      </button>
+                    </div>
+                  `;
+                })
+                .join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // =========================================================================
+    // ACCORDION HELPERS
+    // =========================================================================
+    function toggleAccordion(id) {
+      if (openAccordions.has(id)) {
+        openAccordions.delete(id);
+      } else {
+        openAccordions.add(id);
+      }
+      renderContent();
+    }
+
+    function toggleAllAccordions(tabKey) {
+      const list = MENU_DATA[tabKey];
+      const allOpen = list.every((item) => openAccordions.has(item.id));
+      if (allOpen) {
+        list.forEach((item) => openAccordions.delete(item.id));
+      } else {
+        list.forEach((item) => openAccordions.add(item.id));
+      }
+      renderContent();
+    }
+
+    // =========================================================================
+    // OPTIONAL COMMENTS / ADDONS FIELD HELPERS
+    // =========================================================================
+    function toggleCommentsField() {
+      const container = document.getElementById("addonsCommentsContainer");
+      const icon = document.getElementById("toggleCommentsIcon");
+      const label = document.getElementById("toggleCommentsLabel");
+      const btn = document.getElementById("toggleCommentsBtn");
+      const textarea = document.getElementById("addonsComments");
+
+      isCommentsOpen = !isCommentsOpen;
+
+      if (isCommentsOpen) {
+        container.classList.remove("hidden");
+        icon.classList.remove("fa-plus");
+        icon.classList.add("fa-minus");
+        label.textContent = "Hide Comments";
+        btn.classList.remove("bg-saffron-pale", "text-terracotta", "border-amber-300");
+        btn.classList.add("bg-terracotta", "text-white", "border-terracotta");
+        textarea.focus();
+      } else {
+        container.classList.add("hidden");
+        icon.classList.remove("fa-minus");
+        icon.classList.add("fa-plus");
+        label.textContent = textarea.value.trim() ? "Comments (Added)" : "Comments";
+        btn.classList.add("bg-saffron-pale", "text-terracotta", "border-amber-300");
+        btn.classList.remove("bg-terracotta", "text-white", "border-terracotta");
+      }
+    }
+
+    function handleCommentsInput(val) {
+      const clearBtn = document.getElementById("clearCommentsBtn");
+      if (val.trim().length > 0) {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
+    }
+
+    function clearCommentsField() {
+      const textarea = document.getElementById("addonsComments");
+      textarea.value = "";
+      handleCommentsInput("");
+      textarea.focus();
+    }
+
+    // =========================================================================
+    // SHORTLIST / QUOTE BUILDER LOGIC
+    // =========================================================================
+    function toggleShortlistItem(key, name, category, type) {
+      if (shortlist.has(key)) {
+        shortlist.delete(key);
+        showToast(`Removed "${name}"`);
+      } else {
+        shortlist.set(key, { key, name, category, type });
+        showToast(`Added "${name}" to shortlist`);
+      }
+      renderContent();
+      updateShortlistUI();
+    }
+
+    function removeShortlistItem(key) {
+      shortlist.delete(key);
+      renderContent();
+      updateShortlistUI();
+    }
+
+    function clearShortlist() {
+      shortlist.clear();
+      renderContent();
+      updateShortlistUI();
+      showToast("Shortlist cleared");
+    }
+
+    function updateShortlistUI() {
+      const count = shortlist.size;
+      const badge = document.getElementById("shortlistBadge");
+      const summary = document.getElementById("shortlistSummaryText");
+      const drawerCount = document.getElementById("drawerCount");
+      const clearBtn = document.getElementById("clearAllBtn");
+      const listContainer = document.getElementById("shortlistItemsContainer");
+
+      badge.textContent = count;
+      drawerCount.textContent = count;
+      badge.classList.remove("badge-pop");
+      void badge.offsetWidth;
+      badge.classList.add("badge-pop");
+
+      if (count === 0) {
+        summary.textContent = "Tap + on dishes or packages to build quote";
+        clearBtn.classList.add("hidden");
+        listContainer.innerHTML = `
+          <div class="bg-white rounded-2xl p-6 text-center border border-dashed border-stone-300 space-y-1.5">
+            <i class="fa-solid fa-plate-wheat text-2xl text-saffron/70"></i>
+            <p class="text-xs font-semibold text-stone-700">Your menu shortlist is empty</p>
+            <p class="text-[11px] text-stone-500">Browse Combo Packages, Veg, or Non-Veg tabs and tap <strong>+</strong> to build your custom catering menu.</p>
+          </div>
+        `;
+        return;
+      }
+
+      summary.textContent = `${count} item${count > 1 ? "s" : ""} selected • Ready for WhatsApp quote`;
+      clearBtn.classList.remove("hidden");
+
+      // Group items by category inside drawer
+      const grouped = {};
+      shortlist.forEach((item) => {
+        if (!grouped[item.category]) grouped[item.category] = [];
+        grouped[item.category].push(item);
+      });
+
+      let html = "";
+      Object.keys(grouped).forEach((catName) => {
+        html += `
+          <div class="bg-white rounded-xl border border-stone-200 overflow-hidden">
+            <div class="px-3 py-1.5 bg-amber-50/80 border-b border-stone-100 text-[11px] font-bold text-terracotta">
+              ${catName}
+            </div>
+            <div class="divide-y divide-stone-100">
+              ${grouped[catName]
+                .map(
+                  (item) => `
+                <div class="px-3 py-2 flex items-center justify-between gap-2 text-xs">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span class="w-2 h-2 rounded-full ${item.type === "veg" ? "bg-emerald-600" : "bg-red-600"} shrink-0"></span>
+                    <span class="font-medium text-stone-800 truncate">${item.name}</span>
+                  </div>
+                  <button onclick="removeShortlistItem('${escapeQuotes(item.key)}')" class="text-stone-400 hover:text-red-600 p-1">
+                    <i class="fa-solid fa-trash-can text-[11px]"></i>
+                  </button>
+                </div>
+              `
+                )
+                .join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      listContainer.innerHTML = html;
+    }
+
+    function toggleDrawer(open) {
+      const modal = document.getElementById("shortlistModal");
+      if (open) {
+        updateShortlistUI();
+        modal.classList.remove("hidden");
+      } else {
+        modal.classList.add("hidden");
+      }
+    }
+
+    // =========================================================================
+    // WHATSAPP & CLIPBOARD EXPORT
+    // =========================================================================
+    function buildFormattedInquiryText() {
+      const name = document.getElementById("clientName").value.trim();
+      const date = document.getElementById("eventDate").value;
+      const occasion = document.getElementById("eventType").value;
+      const guests = document.getElementById("guestCount").value.trim();
+      const addonsComments = document.getElementById("addonsComments").value.trim();
+
+      let lines = [
+        "*HEMANTH CATERING & COOKING SERVICES*",
+        "_(Vijayawada • Indupalli)_",
+        "Hello Eswar.P, I would like a catering quote for:",
+        ""
+      ];
+
+      if (name) lines.push(`• *Name:* ${name}`);
+      if (occasion) lines.push(`• *Occasion:* ${occasion}`);
+      if (date) lines.push(`• *Event Date:* ${date}`);
+      if (guests) lines.push(`• *Approx. Guests:* ${guests} Plates`);
+      if (name || date || occasion || guests) lines.push("");
+
+      if (shortlist.size === 0) {
+        lines.push("Please share your catering package details and availability.");
+      } else {
+        lines.push(`*Selected Menu Shortlist (${shortlist.size} items):*`);
+        const grouped = {};
+        shortlist.forEach((item) => {
+          if (!grouped[item.category]) grouped[item.category] = [];
+          grouped[item.category].push(item.name);
+        });
+
+        Object.keys(grouped).forEach((cat) => {
+          lines.push(`\n*${cat}:*`);
+          grouped[cat].forEach((dish, i) => {
+            lines.push(`  ${i + 1}. ${dish}`);
+          });
+        });
+      }
+
+      if (addonsComments) {
+        lines.push("");
+        lines.push("*Addons / Comments:*");
+        lines.push(addonsComments);
+      }
+
+      return lines.join("\n");
+    }
+
+    function sendWhatsAppQuote(phone) {
+      const text = buildFormattedInquiryText();
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+
+    function openDirectWhatsApp() {
+      const text =
+        "Hello Eswar.P (HEMANTH CATERING & COOKING SERVICES), I viewed your digital catering menu and would like to inquire about booking.";
+      window.open(`https://wa.me/919492937499?text=${encodeURIComponent(text)}`, "_blank", "noopener,noreferrer");
+    }
+
+    function copyShortlistToClipboard() {
+      const text = buildFormattedInquiryText().replace(/\*/g, "");
+      const tempArea = document.createElement("textarea");
+      tempArea.value = text;
+      tempArea.style.position = "fixed";
+      tempArea.style.opacity = "0";
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      try {
+        document.execCommand("copy");
+        const label = document.getElementById("copyBtnLabel");
+        label.textContent = "Copied to Clipboard!";
+        showToast("Menu shortlist copied!");
+        setTimeout(() => {
+          label.textContent = "Copy Formatted Menu List";
+        }, 2000);
+      } catch (err) {
+        showToast("Unable to copy text");
+      }
+      document.body.removeChild(tempArea);
+    }
+
+    // =========================================================================
+    // UTILITY HELPERS
+    // =========================================================================
+    function escapeQuotes(str) {
+      return str.replace(/'/g, "\\'").replace(/"/g, "&quot;");
+    }
+
+    function highlightText(text, query) {
+      if (!query) return text;
+      const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`(${escaped})`, "gi");
+      return text.replace(regex, '<mark class="bg-amber-200 text-terracotta-dark rounded px-0.5 font-semibold">$1</mark>');
+    }
+
+    let toastTimer;
+    function showToast(msg) {
+      const toast = document.getElementById("toastMsg");
+      const toastText = document.getElementById("toastText");
+      toastText.textContent = msg;
+      toast.classList.remove("opacity-0");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toast.classList.add("opacity-0");
+      }, 1800);
+    }
+  </script>
+</body>
+</html>
