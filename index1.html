@@ -85,15 +85,15 @@
   <div id="appShell" class="w-full md:max-w-[440px] md:my-3 md:rounded-[2rem] md:shadow-2xl md:border-[6px] md:border-stone-800 bg-parchment min-h-screen md:min-h-[840px] mx-auto relative flex flex-col overflow-x-clip transition-all duration-300">
 
     <!-- 1. STICKY TOP HEADER -->
-    <header id="stickyHeader" class="sticky top-0 z-30 bg-terracotta text-white shadow-md select-none">
-      <div id="headerSwipeArea" class="px-3.5 py-2.5 flex items-center justify-between gap-2 touch-pan-y">
+    <header id="stickyHeader" class="sticky top-0 z-30 bg-terracotta text-white shadow-md">
+      <div class="px-3.5 py-2.5 flex items-center justify-between gap-2">
         <!-- Brand Logo + Title -->
-        <div ondblclick="toggleHeaderAdminBtn()" class="flex items-center gap-2.5 min-w-0 cursor-pointer">
+        <div class="flex items-center gap-2.5 min-w-0">
           <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-parchment p-1 border border-saffron/70 flex items-center justify-center shrink-0 shadow-sm overflow-hidden">
             <img
               src="assets\Hemanth.png"
               alt="Hemanth Catering & Cooking Services Logo"
-              class="w-full h-full object-contain pointer-events-none"
+              class="w-full h-full object-contain"
               onerror="this.onerror=null;this.src='https://placehold.co/96x96/FDFBF7/5A1E12?text=HC';"
             />
           </div>
@@ -110,24 +110,8 @@
           </div>
         </div>
 
-        <!-- Quick Call, WhatsApp & Swipe-Revealed Manage Menu Action Buttons -->
+        <!-- Quick Call & WhatsApp Action Buttons -->
         <div class="flex items-center gap-1.5 shrink-0">
-          <!-- Hidden Manage Menu Button (Revealed by swiping right-to-left on header) -->
-          <div
-            id="hiddenMenuActionWrapper"
-            class="overflow-hidden transition-all duration-300 ease-out max-w-0 opacity-0 translate-x-3 pointer-events-none"
-          >
-            <button
-              type="button"
-              onclick="openMenuManager(true)"
-              title="Add or Remove Menu Items"
-              class="flex items-center gap-1.5 px-2.5 h-9 rounded-full bg-saffron hover:bg-saffron-light active:scale-95 text-terracotta-dark text-xs font-extrabold shadow-sm border border-amber-200/70 whitespace-nowrap transition"
-            >
-              <i class="fa-solid fa-pen-to-square text-xs"></i>
-              <span>Manage Menu</span>
-            </button>
-          </div>
-
           <a href="tel:+919492937499" title="Call Eswar.P" class="flex items-center justify-center w-9 h-9 rounded-full bg-white/15 hover:bg-white/25 active:scale-95 text-amber-100 border border-amber-300/30 transition">
             <i class="fa-solid fa-phone text-sm"></i>
           </a>
@@ -426,13 +410,13 @@
       </div>
     </div>
 
-    <!-- MANAGE MENU MODAL / DRAWER (ADD & REMOVE ITEMS PER CATEGORY) -->
+    <!-- MANAGE MENU MODAL / DRAWER (ACCESSED VIA #manage OR ?manage=1 IN URL) -->
     <div id="menuManagerModal" class="fixed inset-0 z-50 hidden">
       <!-- Backdrop -->
-      <div onclick="openMenuManager(false)" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
+      <div onclick="closeMenuManager()" class="absolute inset-0 bg-black/60 backdrop-blur-xs transition-opacity"></div>
 
       <!-- Modal Panel -->
-      <div class="absolute bottom-0 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-[440px] bg-parchment rounded-t-3xl sm:rounded-3xl shadow-2xl border-t-2 sm:border-2 border-saffron max-h-[90vh] flex flex-col overflow-hidden">
+      <div class="absolute bottom-0 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2 left-1/2 -translate-x-1/2 w-full max-w-[440px] bg-parchment rounded-t-3xl sm:rounded-3xl shadow-2xl border-t-2 sm:border-2 border-saffron max-h-[92vh] flex flex-col overflow-hidden">
         <!-- Header -->
         <div class="bg-terracotta text-white px-4 py-3.5 flex items-center justify-between">
           <div>
@@ -440,9 +424,9 @@
               <i class="fa-solid fa-sliders text-saffron-light"></i>
               Manage Menu Items
             </h2>
-            <p class="text-[11px] text-amber-200">Add or remove dishes in any category</p>
+            <p class="text-[11px] text-amber-200">Add or remove dishes in any category (#manage)</p>
           </div>
-          <button onclick="openMenuManager(false)" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white">
+          <button onclick="closeMenuManager()" class="w-8 h-8 rounded-full bg-white/15 hover:bg-white/25 flex items-center justify-center text-white" aria-label="Close Manage Menu">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </div>
@@ -546,17 +530,28 @@
         </div>
 
         <!-- Footer -->
-        <div class="p-3.5 bg-white border-t border-stone-200 flex items-center justify-between gap-2">
-          <span class="text-[11px] text-stone-500">
-            <i class="fa-solid fa-floppy-disk text-saffron mr-1"></i>Changes auto-save locally
-          </span>
-          <button
-            type="button"
-            onclick="openMenuManager(false)"
-            class="px-4 py-2 rounded-xl bg-terracotta hover:bg-terracotta-light text-white text-xs font-bold transition"
-          >
-            Done
-          </button>
+        <div class="p-3.5 bg-white border-t border-stone-200 space-y-2">
+          <div class="flex items-center justify-between gap-2">
+            <span class="text-[11px] text-stone-500">
+              <i class="fa-solid fa-floppy-disk text-saffron mr-1"></i>Auto-saved on this device
+            </span>
+            <button
+              type="button"
+              onclick="copyMenuDataForGitHub()"
+              class="px-3 py-1.5 rounded-xl bg-saffron-pale hover:bg-amber-200 text-terracotta border border-amber-300 text-[11px] font-bold flex items-center gap-1.5 transition"
+              title="Copy updated menu JSON to paste into index.html on GitHub"
+            >
+              <i class="fa-solid fa-code"></i>
+              <span id="copyMenuJsonLabel">Copy Menu Data</span>
+            </button>
+            <button
+              type="button"
+              onclick="closeMenuManager()"
+              class="px-4 py-2 rounded-xl bg-terracotta hover:bg-terracotta-light text-white text-xs font-bold transition"
+            >
+              Done
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -1170,120 +1165,93 @@
     // Map of key -> { id, name, category, type }
     let shortlist = new Map();
     let isCommentsOpen = false;
-    let isHeaderAdminRevealed = false;
 
     // =========================================================================
-    // INITIALIZATION & HEADER SWIPE GESTURE DETECTION
+    // INITIALIZATION & URL HASH ROUTING (#manage / ?manage=1)
     // =========================================================================
     window.addEventListener("DOMContentLoaded", () => {
-      initHeaderSwipeGesture();
       renderSubFilters();
       renderContent();
       updateShortlistUI();
+      checkManageRoute();
     });
 
-    function initHeaderSwipeGesture() {
-      const swipeArea = document.getElementById("headerSwipeArea");
-      if (!swipeArea) return;
+    window.addEventListener("hashchange", checkManageRoute);
 
-      let startX = 0;
-      let startY = 0;
-      let isTracking = false;
+    function checkManageRoute() {
+      const params = new URLSearchParams(window.location.search);
+      const isManageMode =
+        window.location.hash.toLowerCase() === "#manage" ||
+        params.get("manage") === "1";
 
-      // Touch events for mobile/tablet
-      swipeArea.addEventListener(
-        "touchstart",
-        (e) => {
-          if (e.touches.length !== 1) return;
-          startX = e.touches[0].clientX;
-          startY = e.touches[0].clientY;
-          isTracking = true;
-        },
-        { passive: true }
-      );
-
-      swipeArea.addEventListener(
-        "touchend",
-        (e) => {
-          if (!isTracking || e.changedTouches.length !== 1) return;
-          const endX = e.changedTouches[0].clientX;
-          const endY = e.changedTouches[0].clientY;
-          handleHeaderSwipeDelta(endX - startX, endY - startY);
-          isTracking = false;
-        },
-        { passive: true }
-      );
-
-      // Mouse drag fallback for desktop testing
-      swipeArea.addEventListener("mousedown", (e) => {
-        if (e.button !== 0) return;
-        startX = e.clientX;
-        startY = e.clientY;
-        isTracking = true;
-      });
-
-      window.addEventListener("mouseup", (e) => {
-        if (!isTracking) return;
-        handleHeaderSwipeDelta(e.clientX - startX, e.clientY - startY);
-        isTracking = false;
-      });
-
-      // Keyboard accessibility shortcut (Alt + M)
-      window.addEventListener("keydown", (e) => {
-        if (e.altKey && (e.key === "m" || e.key === "M")) {
-          e.preventDefault();
-          toggleHeaderAdminBtn();
-        }
-      });
-    }
-
-    function handleHeaderSwipeDelta(deltaX, deltaY) {
-      // Ensure horizontal swipe dominates vertical scroll and passes 40px threshold
-      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-        if (deltaX < 0) {
-          // Swiped Right-to-Left -> Show hidden Manage Menu button
-          setHeaderAdminRevealed(true);
-        } else {
-          // Swiped Left-to-Right -> Hide Manage Menu button
-          setHeaderAdminRevealed(false);
-        }
-      }
-    }
-
-    function setHeaderAdminRevealed(revealed) {
-      const wrapper = document.getElementById("hiddenMenuActionWrapper");
-      if (!wrapper) return;
-      isHeaderAdminRevealed = revealed;
-
-      if (revealed) {
-        wrapper.classList.remove("max-w-0", "opacity-0", "translate-x-3", "pointer-events-none");
-        wrapper.classList.add("max-w-[160px]", "opacity-100", "translate-x-0", "pointer-events-auto");
+      if (isManageMode) {
+        openMenuManager();
       } else {
-        wrapper.classList.add("max-w-0", "opacity-0", "translate-x-3", "pointer-events-none");
-        wrapper.classList.remove("max-w-[160px]", "opacity-100", "translate-x-0", "pointer-events-auto");
+        const modal = document.getElementById("menuManagerModal");
+        if (modal && !modal.classList.contains("hidden")) {
+          modal.classList.add("hidden");
+        }
       }
-    }
-
-    function toggleHeaderAdminBtn() {
-      setHeaderAdminRevealed(!isHeaderAdminRevealed);
     }
 
     // =========================================================================
     // MANAGE MENU MODAL (ADD & REMOVE ITEMS IN EACH CATEGORY)
     // =========================================================================
-    function openMenuManager(open) {
+    function openMenuManager() {
       const modal = document.getElementById("menuManagerModal");
       if (!modal) return;
 
-      if (open) {
-        const sectionSelect = document.getElementById("mgrSectionSelect");
-        sectionSelect.value = activeTab;
-        handleManagerSectionChange();
-        cancelResetDefaultMenu();
-        modal.classList.remove("hidden");
-      } else {
+      const sectionSelect = document.getElementById("mgrSectionSelect");
+      sectionSelect.value = activeTab;
+      handleManagerSectionChange();
+      cancelResetDefaultMenu();
+      modal.classList.remove("hidden");
+    }
+
+    function closeMenuManager() {
+      const modal = document.getElementById("menuManagerModal");
+      if (modal) {
         modal.classList.add("hidden");
       }
+
+      // Cleanly strip #manage or ?manage=1 from URL so the normal menu URL is restored
+      const url = new URL(window.location.href);
+      let changed = false;
+      if (url.hash.toLowerCase() === "#manage") {
+        url.hash = "";
+        changed = true;
+      }
+      if (url.searchParams.has("manage")) {
+        url.searchParams.delete("manage");
+        changed = true;
+      }
+      if (changed) {
+        history.replaceState(null, "", url.pathname + url.search + url.hash);
+      }
+    }
+
+    function copyMenuDataForGitHub() {
+      const formattedData = `const DEFAULT_MENU_DATA = ${JSON.stringify(MENU_DATA, null, 2)};`;
+      const tempArea = document.createElement("textarea");
+      tempArea.value = formattedData;
+      tempArea.style.position = "fixed";
+      tempArea.style.opacity = "0";
+      document.body.appendChild(tempArea);
+      tempArea.select();
+      try {
+        document.execCommand("copy");
+        const label = document.getElementById("copyMenuJsonLabel");
+        if (label) {
+          label.textContent = "Copied!";
+          setTimeout(() => {
+            label.textContent = "Copy Menu Data";
+          }, 2000);
+        }
+        showToast("Copied DEFAULT_MENU_DATA for GitHub");
+      } catch (err) {
+        showToast("Unable to copy menu data");
+      }
+      document.body.removeChild(tempArea);
     }
 
     function handleManagerSectionChange() {
